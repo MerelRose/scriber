@@ -39,14 +39,14 @@ router.get('/transcript/:video_id', async (req, res) => {
   }
 });
 
-router.get('/subtitle/:videoId/:taal/change', async (req, res) => {
+router.get('/subtitle/:video_id/:taal/change', async (req, res) => {
   try {
-    const { videoId } = req.params;
+    const { video_id } = req.params;
     const { taal } = req.params;
 
     const [rows] = await db.query(
       'SELECT id, tekst, video_id, time_stamp_start, taal, created_at FROM transcribe WHERE video_id = ? AND taal = ? ORDER BY created_at ASC',
-      [videoId, taal] 
+      [video_id, taal] 
     );
 
     res.json(rows);

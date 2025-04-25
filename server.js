@@ -40,6 +40,64 @@ io.on('connection', (socket) => {
   });
 });
 
+app.use(express.urlencoded({ extended: true }));
+app.post('/transcribe/link', async (req, res) => {
+  try {
+    const videoUrl = req.body.videoUrl;
+
+    if (!videoUrl) {
+      res.status(400).send('Geen video-URL ontvangen.');
+      return;
+    }
+
+    console.log("Downloading video and extracting audio...");
+
+    const audioPath = `audio_${Date.now()}.wav`;
+
+    exec(`yt-dlp -x --audio-format wav -o "${audioPath}" "${videoUrl}"`, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Download error: ${error.message}`);
+        res.status(500).send('Er is iets misgegaan bij het downloaden of converteren van de video.');
+        return;
+      }
+
+      console.log("Audio geconverteerd:", stdout);
+
+      // Voer hier het Python-script uit
+      io.emit('progress', { percentage: 34 });
+      console.log(`Running command: python transcribe.py ${audioPath}`);
+      exec(`python transcribe.py ${audioPath}`, (error, stdout, stderr) => {
+          if (error) {
+              console.error(`Execution error: ${error.message}`);
+              console.error(`stderr: ${stderr}`); 
+              return;
+          }
+      });
+      io.emit('progress', { percentage: 58 });
+      exec(`python transcribe.py ${audioPath}`, (error, stdout) => {
+        console.log("Python transcription...");
+        if (error) {
+          console.error(`Transcription error: ${error.message}`);
+          io.emit('error', { message: 'Er is iets misgegaan bij de transcriptie.' });
+          res.status(500).send('Er is iets misgegaan bij de transcriptie.');
+          return;
+        }
+        io.emit('progress', { percentage: 77 });
+        console.log("Bezig Python transcription...");
+  
+        console.log('Transcriptie voltooid:', stdout);
+        io.emit('progress', { percentage: 100, message: "Transcript voltooid!" }); 
+        res.json({ transcript: stdout }); 
+        fs.unlinkSync(inputPath);
+        fs.unlinkSync(audioPath);
+      });
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Serverfout bij het verwerken van de video.');
+  }
+});
+
 app.post('/transcribe', upload.single('audio'), async (req, res) => {
   try {
     const inputPath = req.file.path;
@@ -144,37 +202,33 @@ app.post('/transcript-submit', async (req, res) => {
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-app.get('/subtitle/:videoId', async (req, res) => {
-  const videoId = req.params.videoId;
+
+app.get('/subtitle/:video_id', async (req, res) => {
+  const video_id = req.params.video_id;
   try {
-    const timeRecords = await db.query(
+    const [timeData] = await db.query(
       'SELECT time_stamp_start FROM transcribe WHERE video_id = ? ORDER BY time_stamp_start',
-      [videoId]
+      [video_id]
     );
-    const subtitles = await db.query(
+    const [subtitleData] = await db.query(
       'SELECT tekst FROM transcribe WHERE video_id = ? ORDER BY time_stamp_start',
-      [videoId]
+      [video_id]
     );
-  
-    const timeData = timeRecords[0]; 
-    const subtitleData = subtitles[0];
-  
-    let vttContent = 'WEBVTT\n\n';
-  
-    const length = Math.min(timeData.length, subtitleData.length);
     
+    let vttContent = 'WEBVTT\n\n';
+
+    const length = Math.min(timeData.length, subtitleData.length);
+
     for (let index = 0; index < length; index++) {
       const time = timeData[index]?.time_stamp_start;
-      const subtitle = subtitleData[index]?.tekst || ''; 
-  
+      const subtitle = subtitleData[index]?.tekst || '';
+
       vttContent += `${time}\n${subtitle}\n\n`;
-      vttContent += 'blahblah';
-      console.log('time'+time);
-      console.log('subtitle'+subtitle);
     }
-  
-    console.log(vttContent);
-    const tempFilePath = path.join(__dirname, 'public', 'temp', `${videoId}.vtt`);
+
+    const tempFilePath = path.join(__dirname, 'public', 'temp', `${video_id}.vtt`);
+    fs.mkdirSync(path.dirname(tempFilePath), { recursive: true });
+
     fs.writeFile(tempFilePath, vttContent, (err) => {
       if (err) {
         console.error('Fout bij het schrijven naar bestand:', err);
@@ -190,14 +244,15 @@ app.get('/subtitle/:videoId', async (req, res) => {
   }
 });
 
+
 fs.mkdirSync(path.join(__dirname, 'public', 'temp'), { recursive: true });
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.post('/subtitle/:videoId/:taal/update', async (req, res) => {
+app.post('/subtitle/:video_id/:taal/update', async (req, res) => {
   try {
-    const { videoId, taal } = req.params;
+    const { video_id, taal } = req.params;
     const { tekst, timeStampStart, id } = req.body;
 
     if (!Array.isArray(tekst) || !Array.isArray(timeStampStart) || !Array.isArray(id)) {
@@ -211,7 +266,7 @@ app.post('/subtitle/:videoId/:taal/update', async (req, res) => {
     for (let i = 0; i < tekst.length; i++) {
       await db.query(
         'UPDATE transcribe SET tekst = ?, time_stamp_start = ? WHERE video_id = ? AND taal = ? AND id = ?',
-        [tekst[i], timeStampStart[i], videoId, taal, id[i]] 
+        [tekst[i], timeStampStart[i], video_id, taal, id[i]] 
       );
     }
 

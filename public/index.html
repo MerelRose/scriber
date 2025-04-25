@@ -11,8 +11,11 @@
   <h1>Upload je MP3/MP4-bestand</h1>
   <form id="uploadForm" enctype="multipart/form-data">
     <Label>Video naam:</Label>
-    <input type="text" name="naam" id="video_naam" required>
-    <input type="file" name="audio" id="audio" accept=".mp3, .mp4, .wav" required>
+
+    <!-- required voor nu uit -->
+    <input type="text" name="naam" id="video_naam" > 
+    <input type="file" name="audio" id="audio" accept=".mp3, .mp4, .wav" >
+
     <button type="submit">Transcribe</button>
     <button id="videoUpload">Upload video informatie</button>
     <button id="triggerEventButton" style="display: none;">Trigger Transcription</button>
@@ -29,14 +32,14 @@
   </video>
   <script>
     const videoElement = document.getElementById('1');
-    const videoId = 2;
+    const video_id = 1;
     
-    fetch(`/subtitle/${videoId}`)
+    fetch(`/subtitle/${video_id}`)
         .then(response => {
             const track = document.createElement('track');
             track.kind = 'subtitles';
             track.label = 'Nederlands';
-            track.src = `temp/${videoId}.vtt`;
+            track.src = `temp/${video_id}.vtt`;
             track.srclang = 'nl';
             track.default = true;
             videoElement.appendChild(track);
@@ -93,16 +96,25 @@
       })
       .catch(error => console.error('Fout bij ophalen talen:', error));
   </script>
-<form id="change" name="transcriptChange" method="POST" action="/subtitle/{videoId}/{taal}/update">
+<form id="change" name="transcriptChange" method="POST" action="/subtitle/{video_id}/{taal}/update">
 
   <script>
-    const taal = "nl";
     const form = document.getElementById('change');
-    form.action = `/subtitle/${videoId}/${taal}/update`;
+    form.action = `/subtitle/${video_id}/${taal}/update`;
   </script>
 
   <button type="submit" id="submitButton2" style="display: none;">Submit Change</button>
 </form>
+
+<form id="link" name="linkSubmit" method="post" action="/transcribe/link">
+  <script>
+    const forms = document.getElementById('link');
+    forms.action = `/transcribe/link`
+  </script>
+  <input type="url" name="videoUrl" id="link" placeholder="Voer de video-URL in" required>
+  <button type="submit" id="linkSubmit">Submit Link</button>
+</form>
+
 
   <pre id="transcriptionMSG"></pre>
   <pre id="transcription"></pre>
