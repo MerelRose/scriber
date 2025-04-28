@@ -40,6 +40,7 @@ io.on('connection', (socket) => {
   });
 });
 
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.post('/transcribe/link', async (req, res) => {
   try {
@@ -51,8 +52,8 @@ app.post('/transcribe/link', async (req, res) => {
     }
 
     console.log("Downloading video and extracting audio...");
-
-    const audioPath = `uploads/audio_${Date.now()}.wav`;
+    const path = require('path');
+    const audioPath = path.join(__dirname, 'uploads', `audio_${Date.now()}.wav`);    
 
     exec(`yt-dlp -x --audio-format wav -o "${audioPath}" "${videoUrl}"`, (error, stdout, stderr) => {
       if (error) {

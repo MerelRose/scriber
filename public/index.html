@@ -20,6 +20,14 @@
     <button id="videoUpload">Upload video informatie</button>
     <button id="triggerEventButton" style="display: none;">Trigger Transcription</button>
   </form>  
+  <form id="uploadLinkForm" enctype="multipart/form-data">
+    <script>
+      // const forms = document.getElementById('link');
+      // forms.action = `/transcribe/link`
+    </script>
+    <input type="url" name="videoUrl" id="link" placeholder="Voer de video-URL in" required>
+    <button type="submit" id="linkSubmit">Submit Link</button>
+  </form>
 
   <hr>
 
@@ -105,15 +113,6 @@
   </script>
 
   <button type="submit" id="submitButton2" style="display: none;">Submit Change</button>
-</form>
-
-<form id="link" name="linkSubmit" method="post">
-  <script>
-    const forms = document.getElementById('link');
-    forms.action = `/transcribe/link`
-  </script>
-  <input type="url" name="videoUrl" id="link" placeholder="Voer de video-URL in" required>
-  <button type="submit" id="linkSubmit">Submit Link</button>
 </form>
 
 

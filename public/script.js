@@ -1,5 +1,6 @@
 const socket = io('http://localhost:3000');
 const uploadForm = document.getElementById('uploadForm');
+const uploadLinkForm = document.getElementById('uploadLinkForm');
 const transcriptionDisplay = document.getElementById('transcription');
 const transcriptionMSG = document.getElementById('transcriptionMSG');
 const progressBar = document.getElementById('progressBar');
@@ -27,16 +28,64 @@ uploadForm.addEventListener('submit', async (event) => {
             method: 'POST',
             body: formData,
         });
+
+        if (!transcribeResponse.ok) throw new Error('Probleem met de server (transcribe).');
+
+        // const transcribeData = await transcribeResponse.json() || await transcribeResponse2.json();
+        const transcribeData = await transcribeResponse?.json();
+        transcriptionDisplay.textContent = `${transcribeData.transcript}`;
+        transcriptionStarted = true; 
+        downloadButton.style.display = 'block'; 
+        languageSelect.style.display = 'block'; 
+        videoSelect.style.display = 'block'; 
+        translateButton.style.display = 'block';
+        uploadButton.style.display = 'block';
+        scriptOphalen.style.display = 'block';
+
+        transcriptionMSG.textContent = "Transcriptie voltooid!";
+        fetch('http://localhost:3000/talen')
+            .then(response => response.json())
+            .then(data => {
+                const select = document.getElementById('languageSelect');
+                data.forEach(lang => {
+                const option = document.createElement('option');
+                option.value = lang.afkorting;
+                option.textContent = lang.naam;
+                option.title = lang.afkorting;
+
+                if (lang.naam === "DUTCH") {
+                    option.selected = true;
+                }
+
+                select.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Fout bij ophalen talen:', error));
+
+    } catch (error) {
+        console.error(error);
+        transcriptionMSG.textContent = `Fout: ${error.message}`;
+        transcriptionStarted = false; 
+        triggerEventButton.style.display = 'block'; 
+    }
+});
+
+uploadLinkForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const formData = new FormData(uploadLinkForm);
+    transcriptionMSG.textContent = "Bestand uploaden...";
+    triggerEventButton.style.display = 'none'; 
+
+    try {
         const transcribeResponse2 = await fetch('/transcribe/link', {
             method: 'POST',
             body: formData,
         });
 
-        if (!transcribeResponse.ok) throw new Error('Probleem met de server (transcribe).');
         if (!transcribeResponse2.ok) throw new Error('Probleem met de server (transcribe).');
 
         // const transcribeData = await transcribeResponse.json() || await transcribeResponse2.json();
-        const transcribeData = await (transcribeResponse?.json() ?? transcribeResponse2.json());
+        const transcribeData = await transcribeResponse2.json();
         transcriptionDisplay.textContent = `${transcribeData.transcript}`;
         transcriptionStarted = true; 
         downloadButton.style.display = 'block'; 
