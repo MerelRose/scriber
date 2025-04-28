@@ -75,6 +75,7 @@ uploadLinkForm.addEventListener('submit', async (event) => {
     triggerEventButton.style.display = 'none'; 
 
     const videoUrl = document.getElementById('videoUrl').value;
+    console.log('dfsaffs'+videoUrl);
 
     try {
         const transcribeResponse2 = await fetch('/transcribe/link', {
@@ -206,9 +207,12 @@ videoUpload.addEventListener('click', async (event) => {
     // const audioFile = formData.get('audio');
     const audioFile = document.getElementById('audio');
     // const filename = audioFile.files.name;
-    const source = audioFile ? audioFile.value : document.getElementById('videoUrl').value;    
+    // const source = audioFile ? audioFile.value : document.getElementById('videoUrl').value;    
+    const source = audioFile && audioFile.value ? audioFile.value : document.getElementById('videoUrl').value;
+
     const naam = document.getElementById('video_naam').value;
 
+    console.log(document.getElementById('videoUrl').value);
     console.log(audioFile);
     console.log(source);
     console.log(naam);
