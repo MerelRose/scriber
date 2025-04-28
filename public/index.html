@@ -13,11 +13,11 @@
     <Label>Video naam:</Label>
 
     <!-- required voor nu uit -->
-    <input type="text" name="naam" id="video_naam" > 
+    <!-- <input type="text" name="naam" id="video_naam" >  -->
     <input type="file" name="audio" id="audio" accept=".mp3, .mp4, .wav" >
 
-    <button type="submit">Transcribe</button>
-    <button id="videoUpload">Upload video informatie</button>
+    <button type="submit">Transcribe Bestand</button>
+    <!-- <button id="videoUpload">Upload video informatie</button> -->
     <button id="triggerEventButton" style="display: none;">Trigger Transcription</button>
   </form>  
   <form id="uploadLinkForm" method="post" >
@@ -25,8 +25,16 @@
       const forms = document.getElementById('uploadLinkForm');
       forms.action = `/transcribe/link`
     </script>
-    <input type="url" name="videoUrl" id="link" placeholder="Voer de video-URL in" required>
-    <button type="submit" id="linkSubmit">Submit Link</button>
+    <input type="url" name="videoUrl" id="videoUrl" placeholder="Voer de video-URL in">
+    <button type="submit" id="linkSubmit">Transcribe Link</button>
+  </form>
+  <form>
+    <input type="text" name="naam" id="video_naam" > 
+    <!-- <select name="sourceType" id="sourceType">
+      <option>Link</option>
+      <option>Bestand</option> 
+    </select> -->
+    <button id="videoUpload">Upload video informatie</button>
   </form>
 
   <hr>

@@ -75,7 +75,7 @@ uploadLinkForm.addEventListener('submit', async (event) => {
     transcriptionMSG.textContent = "Bestand uploaden...";
     triggerEventButton.style.display = 'none'; 
 
-    const videoUrl = document.getElementById('link').value;
+    const videoUrl = document.getElementById('videoUrl').value;
 
     try {
         const transcribeResponse2 = await fetch('/transcribe/link', {
@@ -202,12 +202,24 @@ document.querySelector('#editOphalen').addEventListener('click', () => {
   
 videoUpload.addEventListener('click', async (event) => {
     event.preventDefault();
-    const formData = new FormData(uploadForm);
+    // const formData = new FormData(uploadForm);
+
+    // const audioFile = formData.get('audio');
+    const audioFile = document.getElementById('audio');
+    // const filename = audioFile.files.name;
+    const source = audioFile ? audioFile.value : document.getElementById('videoUrl').value;    
+    const naam = document.getElementById('video_naam').value;
+
+    console.log(audioFile);
+    console.log(source);
+    console.log(naam);
 
     try {
         const videoData = {
-            naam: formData.get('naam'),
-            file_name: formData.get('audio').name
+            // naam: formData.get('naam'),
+            naam: naam,
+            // file_name: formData.get('audio').name
+            file_name: source
         };
 
         const videoResponse = await fetch('/video', {
