@@ -72,19 +72,22 @@ uploadForm.addEventListener('submit', async (event) => {
 
 uploadLinkForm.addEventListener('submit', async (event) => {
     event.preventDefault();
-    const formData = new FormData(uploadLinkForm);
     transcriptionMSG.textContent = "Bestand uploaden...";
     triggerEventButton.style.display = 'none'; 
+
+    const videoUrl = document.getElementById('link').value;
 
     try {
         const transcribeResponse2 = await fetch('/transcribe/link', {
             method: 'POST',
-            body: formData,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ videoUrl })
         });
 
         if (!transcribeResponse2.ok) throw new Error('Probleem met de server (transcribe).');
 
-        // const transcribeData = await transcribeResponse.json() || await transcribeResponse2.json();
         const transcribeData = await transcribeResponse2.json();
         transcriptionDisplay.textContent = `${transcribeData.transcript}`;
         transcriptionStarted = true; 

@@ -18,6 +18,10 @@ const upload = multer({ dest: 'uploads/' });
 
 // Middleware to parse JSON
 app.use(express.json());
+app.use('/', routes);
+
+app.use(express.static('public'));
+app.use(express.urlencoded({ extended: true }));
 
 // opera laat soms niet transcript zien, oplossing:
 import cors from 'cors';
@@ -27,11 +31,6 @@ app.use(cors({
     credentials: true
 }));
 
-app.use(express.json());
-app.use('/', routes);
-
-app.use(express.static('public'));
-
 io.on('connection', (socket) => {
   console.log('Een client is verbonden via Socket.IO');
 
@@ -40,8 +39,6 @@ io.on('connection', (socket) => {
   });
 });
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.post('/transcribe/link', async (req, res) => {
   try {
     const videoUrl = req.body.videoUrl;
@@ -52,7 +49,7 @@ app.post('/transcribe/link', async (req, res) => {
     }
 
     console.log("Downloading video and extracting audio...");
-    const path = require('path');
+    // const path = require('path');
     const audioPath = path.join(__dirname, 'uploads', `audio_${Date.now()}.wav`);    
 
     exec(`yt-dlp -x --audio-format wav -o "${audioPath}" "${videoUrl}"`, (error, stdout, stderr) => {
@@ -245,9 +242,6 @@ app.get('/subtitle/:video_id', async (req, res) => {
 
 
 fs.mkdirSync(path.join(__dirname, 'public', 'temp'), { recursive: true });
-
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
 
 app.post('/subtitle/:video_id/:taal/update', async (req, res) => {
   try {
