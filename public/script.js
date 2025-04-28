@@ -27,10 +27,15 @@ uploadForm.addEventListener('submit', async (event) => {
             method: 'POST',
             body: formData,
         });
+        const transcribeResponse2 = await fetch('/transcribe/link', {
+            method: 'POST',
+            body: formData,
+        });
 
         if (!transcribeResponse.ok) throw new Error('Probleem met de server (transcribe).');
+        if (!transcribeResponse2.ok) throw new Error('Probleem met de server (transcribe).');
 
-        const transcribeData = await transcribeResponse.json();
+        const transcribeData = await transcribeResponse.json() || await transcribeResponse2.json();
         transcriptionDisplay.textContent = `${transcribeData.transcript}`;
         transcriptionStarted = true; 
         downloadButton.style.display = 'block'; 

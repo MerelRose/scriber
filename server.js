@@ -63,7 +63,6 @@ app.post('/transcribe/link', async (req, res) => {
 
       console.log("Audio geconverteerd:", stdout);
 
-      // Voer hier het Python-script uit
       io.emit('progress', { percentage: 34 });
       console.log(`Running command: python transcribe.py ${audioPath}`);
       exec(`python transcribe.py ${audioPath}`, (error, stdout, stderr) => {
@@ -88,8 +87,7 @@ app.post('/transcribe/link', async (req, res) => {
         console.log('Transcriptie voltooid:', stdout);
         io.emit('progress', { percentage: 100, message: "Transcript voltooid!" }); 
         res.json({ transcript: stdout }); 
-        fs.unlinkSync(inputPath);
-        fs.unlinkSync(audioPath);
+        // fs.unlinkSync(audioPath);
       });
     });
   } catch (error) {
