@@ -99,6 +99,7 @@
 <form id="change" name="transcriptChange" method="POST" action="/subtitle/{video_id}/{taal}/update">
 
   <script>
+    const taal = document.getElementById('languageSelect').value;
     const form = document.getElementById('change');
     form.action = `/subtitle/${video_id}/${taal}/update`;
   </script>

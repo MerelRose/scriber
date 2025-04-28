@@ -52,7 +52,7 @@ app.post('/transcribe/link', async (req, res) => {
 
     console.log("Downloading video and extracting audio...");
 
-    const audioPath = `audio_${Date.now()}.wav`;
+    const audioPath = `uploads/audio_${Date.now()}.wav`;
 
     exec(`yt-dlp -x --audio-format wav -o "${audioPath}" "${videoUrl}"`, (error, stdout, stderr) => {
       if (error) {
@@ -87,7 +87,7 @@ app.post('/transcribe/link', async (req, res) => {
         console.log('Transcriptie voltooid:', stdout);
         io.emit('progress', { percentage: 100, message: "Transcript voltooid!" }); 
         res.json({ transcript: stdout }); 
-        // fs.unlinkSync(audioPath);
+        fs.unlinkSync(audioPath);
       });
     });
   } catch (error) {
