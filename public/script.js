@@ -31,7 +31,6 @@ uploadForm.addEventListener('submit', async (event) => {
 
         if (!transcribeResponse.ok) throw new Error('Probleem met de server (transcribe).');
 
-        // const transcribeData = await transcribeResponse.json() || await transcribeResponse2.json();
         const transcribeData = await transcribeResponse?.json();
         transcriptionDisplay.textContent = `${transcribeData.transcript}`;
         transcriptionStarted = true; 
