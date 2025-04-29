@@ -36,15 +36,15 @@
   <video id="2" name="video" width="300" height="auto" controls>
     <source src="./ghost.mp4" type="video/mp4">
     Your browser does not support the video tag.
-  </video>
-  <script>
-    // const video_id = document.getElementsByName('video').id;
-    // const videoElement = document.getElementById(`${video_id}`);
-    // console.log('video id:' + video_id);
-    const video_id = 2;
-    
-    fetch(`/subtitle/${video_id}`)
-        .then(response => {
+    <script>
+      // Use the video id to get the video element
+      const video_id = 2;
+      const videoElement = document.getElementById(video_id.toString()); // Convert to string for ID lookup
+      
+      if (videoElement) {
+        fetch(`/subtitle/${video_id}`)
+          .then(response => response.json()) // Assuming the response is JSON, adjust as needed
+          .then(data => {
             const track = document.createElement('track');
             track.kind = 'subtitles';
             track.label = 'Nederlands';
@@ -52,9 +52,13 @@
             track.srclang = 'nl';
             track.default = true;
             videoElement.appendChild(track);
-        })
-        .catch(error => console.error('Fout bij het laden van ondertitels:', error));
-  </script>
+          })
+          .catch(error => console.error('Fout bij het laden van ondertitels:', error));
+      } else {
+        console.error('Video element not found.');
+      }
+    </script>
+  </video>
 
   <hr>
 
