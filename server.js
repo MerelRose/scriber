@@ -199,8 +199,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// undefined.vtt?
-// .vtt niet supported, karin vragen hoe ze dat willen zien.
+// .vtt 'niet supported', karin vragen hoe ze dat willen zien.
 app.get('/subtitle/:video_id', async (req, res) => {
   const video_id = req.params.video_id;
   try {
