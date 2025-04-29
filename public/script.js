@@ -42,24 +42,6 @@ uploadForm.addEventListener('submit', async (event) => {
         scriptOphalen.style.display = 'block';
 
         transcriptionMSG.textContent = "Transcriptie voltooid!";
-        fetch('http://localhost:3000/talen')
-            .then(response => response.json())
-            .then(data => {
-                const select = document.getElementById('languageSelect');
-                data.forEach(lang => {
-                const option = document.createElement('option');
-                option.value = lang.afkorting;
-                option.textContent = lang.naam;
-                option.title = lang.afkorting;
-
-                if (lang.naam === "DUTCH") {
-                    option.selected = true;
-                }
-
-                select.appendChild(option);
-                });
-            })
-            .catch(error => console.error('Fout bij ophalen talen:', error));
 
     } catch (error) {
         console.error(error);
@@ -124,31 +106,6 @@ uploadLinkForm.addEventListener('submit', async (event) => {
         transcriptionStarted = false; 
         triggerEventButton.style.display = 'block'; 
     }
-});
-
-document.querySelector('#scriptOphalen').addEventListener('click', () => {
-    const video_id = document.getElementById('videoSelect').value;
-    console.log('video:' + video_id);
-    transcriptionMSG.textContent = "Transcripties opgehaald!";
-
-    fetch(`http://localhost:3000/transcript/${video_id}`)
-    .then(response => response.json())
-    .then(data => {
-      console.log(data);
-      
-      if (Array.isArray(data)) {
-        let transcript = data.map(item => 
-          `${item.time_stamp_start}\n${item.tekst}\n`
-        ).join('');
-        transcriptionDisplay.textContent = transcript;
-      } else {
-        transcriptionDisplay.textContent = 'Unexpected data format.';
-      }
-    })
-    .catch(error => {
-      console.error('Error during fetch:', error);
-      transcriptionDisplay.textContent = 'An error occurred while fetching the transcript.';
-    });  
 });
 
 document.querySelector('#editOphalen').addEventListener('click', () => {
