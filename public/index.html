@@ -37,13 +37,12 @@
     <source src="./ghost.mp4" type="video/mp4">
     Your browser does not support the video tag.
     <script>
-      // Use the video id to get the video element
       const video_id = 2;
-      const videoElement = document.getElementById(video_id.toString()); // Convert to string for ID lookup
+      const videoElement = document.getElementById(video_id.toString()); 
       
       if (videoElement) {
         fetch(`/subtitle/${video_id}`)
-          .then(response => response.json()) // Assuming the response is JSON, adjust as needed
+          .then(response => response.json()) 
           .then(data => {
             const track = document.createElement('track');
             track.kind = 'subtitles';
@@ -63,7 +62,7 @@
   <hr>
 
   <select id="videoSelect" style="display: none;"></select>
-  <button id="scriptOphalen" style="display: none;">Transcripts ophalen</button>
+  <!-- <button id="scriptOphalen" style="display: none;">Transcripts ophalen</button> -->
   <select id="languageSelect" style="display: none;"></select>
 
   <button id="uploadButton" style="display: none;">Upload Transcriptie</button>

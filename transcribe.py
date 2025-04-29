@@ -35,7 +35,7 @@ def transcribe(audio_path):
     rec = KaldiRecognizer(model, wf.getframerate())
     rec.SetWords(True)
 
-    transcript = "WEBVTT\n\n"
+    transcript = ""
     last_end_time = None
 
     while True:

@@ -246,15 +246,11 @@ submitButton2.addEventListener('click', async (event) => {
         transcriptionMSG.textContent = `Fout bij update: ${error.message}`;
     }
 });
-  
+
 videoUpload.addEventListener('click', async (event) => {
     event.preventDefault();
-    // const formData = new FormData(uploadForm);
 
-    // const audioFile = formData.get('audio');
     const audioFile = document.getElementById('audio');
-    // const filename = audioFile.files.name;
-    // const source = audioFile ? audioFile.value : document.getElementById('videoUrl').value;    
     const source = audioFile && audioFile.value ? audioFile.value : document.getElementById('videoUrl').value;
 
     const naam = document.getElementById('video_naam').value;
