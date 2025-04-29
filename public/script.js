@@ -13,7 +13,6 @@ const uploadButton = document.getElementById('uploadButton');
 const submitButton = document.getElementById('submitButton');
 const submitButton2 = document.getElementById('submitButton2');
 const videoUpload = document.getElementById('videoUpload');
-const scriptOphalen = document.getElementById('scriptOphalen');
 
 let transcriptionStarted = false;
 
@@ -39,7 +38,6 @@ uploadForm.addEventListener('submit', async (event) => {
         videoSelect.style.display = 'block'; 
         translateButton.style.display = 'block';
         uploadButton.style.display = 'block';
-        scriptOphalen.style.display = 'block';
 
         transcriptionMSG.textContent = "Transcriptie voltooid!";
 
