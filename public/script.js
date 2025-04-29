@@ -206,12 +206,10 @@ submitButton2.addEventListener('click', async (event) => {
     const video_id = document.getElementById('videoSelectChange').value;
     const taal = document.getElementById('languageSelectChange').value;
 
-    // Verzamel de dynamische inputs
     const tekstInputs = document.getElementsByName('tekst[]');
     const timeInputs = document.getElementsByName('timeStampStart[]');
     const idInputs = document.getElementsByName('id[]');
 
-    // Maak de aparte arrays
     const tekstArray = [];
     const timeStampStartArray = [];
     const idArray = [];
@@ -222,14 +220,13 @@ submitButton2.addEventListener('click', async (event) => {
         idArray.push(idInputs[i].value);
     }
 
-    // Maak het data-object
     const transcriptieData = {
         tekst: tekstArray,
         timeStampStart: timeStampStartArray,
         id: idArray
     };
 
-    console.log('Verzonden data:', transcriptieData); // Inspecteer wat we versturen
+    console.log('Verzonden data:', transcriptieData); 
 
     try {
         const response = await fetch(`/subtitle/${video_id}/${taal}/update`, {

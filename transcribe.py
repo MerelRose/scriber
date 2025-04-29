@@ -4,6 +4,7 @@ import sys
 import json
 
 def format_time(seconds):
+    """Formateer tijd in het juiste formaat voor VTT."""
     hours = int(seconds // 3600)
     minutes = int((seconds % 3600) // 60)
     seconds = seconds % 60
@@ -11,6 +12,7 @@ def format_time(seconds):
     return f"{hours:02}:{minutes:02}:{int(seconds):02}.{milliseconds:03}"
 
 def split_text_by_word_limit(text, limit=10):
+    """Splits tekst in chunks van maximaal 10 woorden."""
     words = text.split()
     chunks = []
     for i in range(0, len(words), limit):
@@ -18,7 +20,7 @@ def split_text_by_word_limit(text, limit=10):
     return chunks
 
 def transcribe(audio_path):
-    model_path = "C:/xampp/htdocs/project/models/en"
+    model_path = "C:/xampp/htdocs/project/models/en"  
     model = Model(model_path)
 
     try:
@@ -31,10 +33,10 @@ def transcribe(audio_path):
         return
 
     rec = KaldiRecognizer(model, wf.getframerate())
-    rec.SetWords(True) 
+    rec.SetWords(True)
 
-    transcript = ""
-    # transcript = "WEBVTT\n\n"
+    transcript = "WEBVTT\n\n"
+    last_end_time = None
 
     while True:
         data = wf.readframes(1000)
@@ -50,9 +52,21 @@ def transcribe(audio_path):
                     text = result_json['text']
 
                     text_chunks = split_text_by_word_limit(text, 10)
-                    for chunk in text_chunks:
-                        transcript += f"{start_time} --> {end_time}\n"
+                    for idx, chunk in enumerate(text_chunks):
+                        if idx == 0:
+                            chunk_start_time = start_time
+                        else:
+                            chunk_start_time = last_end_time
+
+                        if idx == len(text_chunks) - 1:
+                            chunk_end_time = end_time
+                        else:
+                            chunk_end_time = format_time(words[min((idx + 1) * 10, len(words)) - 1]['end'])
+
+                        transcript += f"{chunk_start_time} --> {chunk_end_time}\n"
                         transcript += f"{chunk}\n"
+
+                        last_end_time = chunk_end_time
 
     final_result = json.loads(rec.FinalResult())
     if 'result' in final_result:
@@ -63,12 +77,23 @@ def transcribe(audio_path):
             text = final_result['text']
 
             text_chunks = split_text_by_word_limit(text, 10)
-            for chunk in text_chunks:
-                transcript += f"{start_time} --> {end_time}\n"
+            for idx, chunk in enumerate(text_chunks):
+                if idx == 0:
+                    chunk_start_time = start_time
+                else:
+                    chunk_start_time = last_end_time
+
+                if idx == len(text_chunks) - 1:
+                    chunk_end_time = end_time
+                else:
+                    chunk_end_time = format_time(words[min((idx + 1) * 10, len(words)) - 1]['end'])
+
+                transcript += f"{chunk_start_time} --> {chunk_end_time}\n"
                 transcript += f"{chunk}\n"
 
+                last_end_time = chunk_end_time
+
     wf.close()
-    # print("Transcriptie voltooid!")
     print(transcript)
 
 if __name__ == "__main__":

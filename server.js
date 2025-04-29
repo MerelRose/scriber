@@ -199,6 +199,8 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// undefined.vtt?
+// .vtt niet supported, karin vragen hoe ze dat willen zien.
 app.get('/subtitle/:video_id', async (req, res) => {
   const video_id = req.params.video_id;
   try {
@@ -239,8 +241,6 @@ app.get('/subtitle/:video_id', async (req, res) => {
     res.status(500).send('Fout bij het ophalen van ondertitels');
   }
 });
-
-
 fs.mkdirSync(path.join(__dirname, 'public', 'temp'), { recursive: true });
 
 app.post('/subtitle/:video_id/:taal/update', async (req, res) => {
