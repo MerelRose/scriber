@@ -10,7 +10,7 @@
 <body>
   <h1>Upload je MP3/MP4-bestand</h1>
   <form id="uploadForm" enctype="multipart/form-data">
-    <input type="file" name="audio" id="audio" accept=".mp3, .mp4, .wav" >
+    <input type="file" name="audio" id="audio" accept=".mp3, .mp4, .wav" required>
     <button type="submit">Transcribe Bestand</button>
     <button id="triggerEventButton" style="display: none;">Trigger Transcription</button>
   </form>  
@@ -19,12 +19,12 @@
       const forms = document.getElementById('uploadLinkForm');
       forms.action = `/transcribe/link`
     </script>
-    <input type="url" name="videoUrl" id="videoUrl" placeholder="Voer de video-URL in">
+    <input type="url" name="videoUrl" id="videoUrl" placeholder="Voer de video-URL in" required>
     <button type="submit" id="linkSubmit">Transcribe Link</button>
   </form>
   <form>
     <Label>Video naam:</Label>
-    <input type="text" name="naam" id="video_naam" > 
+    <input type="text" name="naam" id="video_naam" required> 
     <button id="videoUpload">Upload video informatie</button>
   </form>
 
@@ -39,14 +39,14 @@
   </video>
   <script>
     const videoElement = document.getElementById('1');
-    const video_id = 1;
+    // const video_id = 1;
     
     fetch(`/subtitle/${video_id}`)
         .then(response => {
             const track = document.createElement('track');
             track.kind = 'subtitles';
             track.label = 'Nederlands';
-            track.src = `temp/${video_id}.vtt`;
+            track.src = `temp/${video_id2}.vtt`;
             track.srclang = 'nl';
             track.default = true;
             videoElement.appendChild(track);
@@ -103,13 +103,8 @@
       })
       .catch(error => console.error('Fout bij ophalen talen:', error));
   </script>
-<form id="change" name="transcriptChange" method="POST" action="/subtitle/{video_id}/{taal}/update">
-
-  <script>
-    const taal = document.getElementById('languageSelect').value;
-    const form = document.getElementById('change');
-    form.action = `/subtitle/${video_id}/${taal}/update`;
-  </script>
+  
+<form id="change" name="transcriptChange">
 
   <button type="submit" id="submitButton2" style="display: none;">Submit Change</button>
 </form>

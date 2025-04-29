@@ -199,6 +199,56 @@ document.querySelector('#editOphalen').addEventListener('click', () => {
       transcriptionDisplay.textContent = 'An error occurred while fetching the transcript.';
     });  
 });
+
+submitButton2.addEventListener('click', async (event) => {
+    event.preventDefault();
+
+    const video_id = document.getElementById('videoSelectChange').value;
+    const taal = document.getElementById('languageSelectChange').value;
+
+    // Verzamel de dynamische inputs
+    const tekstInputs = document.getElementsByName('tekst[]');
+    const timeInputs = document.getElementsByName('timeStampStart[]');
+    const idInputs = document.getElementsByName('id[]');
+
+    // Maak de aparte arrays
+    const tekstArray = [];
+    const timeStampStartArray = [];
+    const idArray = [];
+
+    for (let i = 0; i < idInputs.length; i++) {
+        tekstArray.push(tekstInputs[i].value);
+        timeStampStartArray.push(timeInputs[i].value);
+        idArray.push(idInputs[i].value);
+    }
+
+    // Maak het data-object
+    const transcriptieData = {
+        tekst: tekstArray,
+        timeStampStart: timeStampStartArray,
+        id: idArray
+    };
+
+    console.log('Verzonden data:', transcriptieData); // Inspecteer wat we versturen
+
+    try {
+        const response = await fetch(`/subtitle/${video_id}/${taal}/update`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(transcriptieData)
+        });
+
+        if (!response.ok) throw new Error('Probleem met de server (update mislukt).');
+
+        const result = await response.json();
+        transcriptionMSG.textContent = result.message || 'Transcriptie succesvol bijgewerkt!';
+    } catch (error) {
+        console.error(error);
+        transcriptionMSG.textContent = `Fout bij update: ${error.message}`;
+    }
+});
   
 videoUpload.addEventListener('click', async (event) => {
     event.preventDefault();
