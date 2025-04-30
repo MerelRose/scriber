@@ -76,7 +76,6 @@ uploadLinkForm.addEventListener('submit', async (event) => {
         videoSelect.style.display = 'block'; 
         translateButton.style.display = 'block';
         uploadButton.style.display = 'block';
-        scriptOphalen.style.display = 'block';
 
         transcriptionMSG.textContent = "Transcriptie voltooid!";
         fetch('http://localhost:3000/talen')

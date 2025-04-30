@@ -6,6 +6,8 @@
   <title>MP3/MP4 Transcriber</title>
   <!-- Include Socket.IO client library -->
   <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+  <!-- GET http://localhost:3000/favicon.ico 404 (Not Found) FIXER -->
+  <link rel="shortcut icon" href="">
 </head>
 <body>
   <h1>Upload je MP3/MP4-bestand</h1>
@@ -15,10 +17,6 @@
     <button id="triggerEventButton" style="display: none;">Trigger Transcription</button>
   </form>  
   <form id="uploadLinkForm" method="post" >
-    <script>
-      const forms = document.getElementById('uploadLinkForm');
-      forms.action = `/transcribe/link`
-    </script>
     <input type="url" name="videoUrl" id="videoUrl" placeholder="Voer de video-URL in" required>
     <button type="submit" id="linkSubmit">Transcribe Link</button>
   </form>
@@ -129,7 +127,6 @@
   </script>
   
 <form id="change" name="transcriptChange">
-
   <button type="submit" id="submitButton2" style="display: none;">Submit Change</button>
 </form>
 
