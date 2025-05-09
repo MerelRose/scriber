@@ -1,0 +1,660 @@
+{
+	"info": {
+		"_postman_id": "7a45700a-80ba-4c63-93be-e2dadd6e8de0",
+		"name": "transcribe",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28209776"
+	},
+	"item": [
+		{
+			"name": "talen",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "e91c254ad58860a02c788dfb5c1a65d6a8846ab1dc649631c7db16fef4af2dec",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJHRkciLCJpYXQiOjE3NDYxMDQ4NjQsImV4cCI6MTc0NjEwODQ2NH0.mxytEwSHPPnfMWVv1WU67wKMZJXIld0UGUG0dkoWrJc",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:4000/talen",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"talen"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "videos",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "e91c254ad58860a02c788dfb5c1a65d6a8846ab1dc649631c7db16fef4af2dec",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:4000/videos",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"videos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "transcript video",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "e91c254ad58860a02c788dfb5c1a65d6a8846ab1dc649631c7db16fef4af2dec",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:4000/transcript/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"transcript",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "transcript change",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "e91c254ad58860a02c788dfb5c1a65d6a8846ab1dc649631c7db16fef4af2dec",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:4000/subtitle/1/nl/change",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"subtitle",
+						"1",
+						"nl",
+						"change"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "transcript",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "e91c254ad58860a02c788dfb5c1a65d6a8846ab1dc649631c7db16fef4af2dec",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:4000/transcript/1/nl",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"transcript",
+						"1",
+						"nl"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "subtitle",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "e91c254ad58860a02c788dfb5c1a65d6a8846ab1dc649631c7db16fef4af2dec",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:4000/subtitle/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"subtitle",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "subtitle update",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "e91c254ad58860a02c788dfb5c1a65d6a8846ab1dc649631c7db16fef4af2dec",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"tekst\": [\"Eerste tekst\", \"Tweede tekst\"],\r\n  \"timeStampStart\": [\"00:00:01.000\", \"00:00:05.000\"],\r\n  \"id\": [206, 205]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/subtitle/0/hy/update",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"subtitle",
+						"0",
+						"hy",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "video update",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "e91c254ad58860a02c788dfb5c1a65d6a8846ab1dc649631c7db16fef4af2dec",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"naam\": [\"test\"],\r\n  \"file_name\": [\"nieuw.mp3\"],\r\n  \"id\": [5]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/video/5/update",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"video",
+						"5",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "taal update",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "e91c254ad58860a02c788dfb5c1a65d6a8846ab1dc649631c7db16fef4af2dec",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"naam\": [\"AFAR\"],\r\n  \"afkorting\": [\"aa\"]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/taal/aa/update",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"taal",
+						"aa",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "video",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "e91c254ad58860a02c788dfb5c1a65d6a8846ab1dc649631c7db16fef4af2dec",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJHRkciLCJpYXQiOjE3NDYxMDQ4NjQsImV4cCI6MTc0NjEwODQ2NH0.mxytEwSHPPnfMWVv1WU67wKMZJXIld0UGUG0dkoWrJc",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"naam\": \"Mijn Video\",\r\n  \"file_name\": \"video123.mp4\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/video",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"video"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "taal",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "e91c254ad58860a02c788dfb5c1a65d6a8846ab1dc649631c7db16fef4af2dec",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJHRkciLCJpYXQiOjE3NDYxNzAzNjcsImV4cCI6MTc0NjE3Mzk2N30.vltPfp2ipQJ-5EaWU-__kx9r27HLAie82k0hIB3UTXk",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"naam\": \"test\",\r\n  \"afkorting\": \"wq\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/talen",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"talen"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "transcript submit",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "e91c254ad58860a02c788dfb5c1a65d6a8846ab1dc649631c7db16fef4af2dec",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"tekst\": \"Dit is een test transcript.\",\r\n  \"video_id\": 1,\r\n  \"time_stamp_start\": \"00:00:01.000\",\r\n  \"taal\": \"nl\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/transcript-submit",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"transcript-submit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "transcribe",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "e91c254ad58860a02c788dfb5c1a65d6a8846ab1dc649631c7db16fef4af2dec",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "audio",
+							"type": "file",
+							"src": "/C:/Users/Administrator/Downloads/Jack Black - Steve's Lava Chicken (Official Music Video) _ A Minecraft Movie Soundtrack _ WaterTower 4.mp3"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:4000/transcribe",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"transcribe"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "transcribe link",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "e91c254ad58860a02c788dfb5c1a65d6a8846ab1dc649631c7db16fef4af2dec",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"videoUrl\": \"https://youtube.com/shorts/F4dZ8PRMPvI?si=mokmVVopEulxipGx\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/transcribe/link",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"transcribe",
+						"link"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "video",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "e91c254ad58860a02c788dfb5c1a65d6a8846ab1dc649631c7db16fef4af2dec",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"videoUrl\": \"https://youtube.com/shorts/F4dZ8PRMPvI?si=mokmVVopEulxipGx\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/video/4/del",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"video",
+						"4",
+						"del"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "transcribe",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "e91c254ad58860a02c788dfb5c1a65d6a8846ab1dc649631c7db16fef4af2dec",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/transcript/207/del",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"transcript",
+						"207",
+						"del"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "subtitle",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "e91c254ad58860a02c788dfb5c1a65d6a8846ab1dc649631c7db16fef4af2dec",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"videoUrl\": \"https://youtube.com/shorts/F4dZ8PRMPvI?si=mokmVVopEulxipGx\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/subtitle/0/del",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"subtitle",
+						"0",
+						"del"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "subtitle taal",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "e91c254ad58860a02c788dfb5c1a65d6a8846ab1dc649631c7db16fef4af2dec",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"videoUrl\": \"https://youtube.com/shorts/F4dZ8PRMPvI?si=mokmVVopEulxipGx\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/subtitle/0/bi/del",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"subtitle",
+						"0",
+						"bi",
+						"del"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "taal",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "e91c254ad58860a02c788dfb5c1a65d6a8846ab1dc649631c7db16fef4af2dec",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJHRkciLCJpYXQiOjE3NDYxMDkyNDUsImV4cCI6MTc0NjExMjg0NX0.mDP-WInXHvieMNdo2jbJnXvo8X8axEAAHKu5ug0betw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"videoUrl\": \"https://youtube.com/shorts/F4dZ8PRMPvI?si=mokmVVopEulxipGx\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/talen/aa",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"talen",
+						"aa"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
