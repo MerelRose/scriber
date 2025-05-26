@@ -37,14 +37,20 @@ def transcribe(audio_path):
         end = format_time(segment["end"])
         text = segment["text"].strip()
         chunks = split_text_by_word_limit(text, 10)
+        
+        chunk_count = len(chunks)
+        chunk_duration = duration / chunk_count
 
-        for chunk in chunks:
+        for i, chunk in enumerate(chunks):
+            chunk_start_raw = start_raw + i * chunk_duration
+            chunk_end_raw = chunk_start_raw + chunk_duration
             output.append({
-                "start": start,
-                "end": end,
-                "duration": duration,
+                "start": format_time(chunk_start_raw),
+                "end": format_time(chunk_end_raw),
+                "duration": chunk_duration,
                 "chunk": chunk
             })
+
 
     return {"segments": output}
 
