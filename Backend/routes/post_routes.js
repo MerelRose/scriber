@@ -165,6 +165,50 @@ router.post('/translateh', validateApiKey, validateToken, async (req, res) => {
       res.status(500).json({ error: error.message });
     }
   });
+
+  
+// mistral ai model. taal support, met opmerkingen/kwaliteit:
+// (3) engels & frans (beide zijn zeer goed)
+// (2) duits, spaans & taliaans (alle 3 zijn goed)
+// (1) nederlands(redelijk, soms inconsistent) & portugees(acceptabel)
+  router.post('/translate/mistral', async (req, res) => {
+    const { text, to } = req.body;
+  
+    if (!Array.isArray(text) || !to) {
+      return res.status(400).json({ error: 'text moet een array zijn en to moet opgegeven worden' });
+    }
+  
+    try {
+      const translations = await Promise.all(
+        text.map(async (chunk) => {
+          const response = await fetch('http://localhost:11434/api/generate', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              model: 'mistral',
+              prompt: `Vertaal dit naar formeel ${to}. Voeg geen uitleg, informatie of alternatieven toe:\n${chunk}`,
+              temperature: 0.2,
+              stream: false
+            })
+            
+          });
+  
+          const data = await response.json();
+          console.log('Ollama raw response:', JSON.stringify(data, null, 2));          
+  
+          return data?.response?.trim() || 'Geen vertaling';
+        })
+      );
+  
+      res.json({ translatedText: translations });
+    } catch (err) {
+      console.error('Vertaalfout:', err);
+      res.status(500).json({ error: err.message });
+    }
+  });
+  
   
 
 export default router;
