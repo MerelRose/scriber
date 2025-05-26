@@ -35,7 +35,8 @@ const Transcribe_demo = () => {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({
         text,
-        language: 'nl'
+        language: 'nl',
+        disabledRules: 'UPPERCASE_SENTENCE_START'
       })
     });
   
