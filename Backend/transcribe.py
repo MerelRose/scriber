@@ -22,28 +22,42 @@ def split_text_by_word_limit(text, limit=10):
     return chunks
 
 def transcribe(audio_path):
+    # Laad het Whisper-model (in dit geval de 'base'-versie)
     model = whisper.load_model("base")
+
+    # Transcribeer het audiobestand en vraag ook om woord-timestamps
     result = model.transcribe(audio_path, word_timestamps=True)
-    
+
     output = []
+    # Haal de segmenten op uit het resultaat (elk segment bevat een stuk tekst met tijdstempels)
     segments = result.get("segments", [])
 
     for segment in segments:
+        # Ruwe start- en eindtijd van het segment in seconden
         start_raw = segment["start"]
         end_raw = segment["end"]
-        duration = end_raw - start_raw
+        duration = end_raw - start_raw  # Totale duur van het segment
 
+        # Formatteer de tijdstempels naar een leesbaar formaat (bijv. mm:ss)
         start = format_time(segment["start"])
         end = format_time(segment["end"])
+
+        # Haal de tekst uit het segment en verwijder eventuele spaties aan het begin/einde
         text = segment["text"].strip()
+
+        # Splits de tekst in kleinere stukken van maximaal 10 woorden
         chunks = split_text_by_word_limit(text, 10)
-        
+
         chunk_count = len(chunks)
+        # Bereken de duur van elk tekststukje op basis van het totale segment
         chunk_duration = duration / chunk_count
 
+        # Verdeel het segment in kleinere stukjes met bijbehorende tijdstempels
         for i, chunk in enumerate(chunks):
             chunk_start_raw = start_raw + i * chunk_duration
             chunk_end_raw = chunk_start_raw + chunk_duration
+
+            # Voeg elk stukje toe aan de output met starttijd, eindtijd, duur en tekst
             output.append({
                 "start": format_time(chunk_start_raw),
                 "end": format_time(chunk_end_raw),
@@ -51,7 +65,7 @@ def transcribe(audio_path):
                 "chunk": chunk
             })
 
-
+    # Geef de uiteindelijke lijst van gesegmenteerde transcripties terug
     return {"segments": output}
 
 # Controleer script correct wordt aangeroepen via command-line
