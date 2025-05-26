@@ -10,12 +10,39 @@ const Transcribe_demo = () => {
   const handleVideoUrlChange = (e) => {
     setVideoUrl(e.target.value);
   };
+// handle change met spelling controlle, werkt niet goed
+  // const handleSegmentChange = async (index, field, value) => {
+  //   const updatedSegments = [...segments];
+  //   updatedSegments[index][field] = value;
+  
+  //   if (field === 'chunk') {
+  //     const matches = await checkSpelling(value);
+  //     updatedSegments[index].spellingIssues = matches;
+  //   }
+  
+  //   setSegments(updatedSegments);
+  // };
 
   const handleSegmentChange = (index, field, value) => {
     const updatedSegments = [...segments];
     updatedSegments[index][field] = value;
     setSegments(updatedSegments);
   };  
+
+  const checkSpelling = async (text) => {
+    const response = await fetch('https://api.languagetool.org/v2/check', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        text,
+        language: 'nl'
+      })
+    });
+  
+    const result = await response.json();
+    return result.matches;
+  };
+  
 
   const handleTranslate = async () => {
     const select = document.getElementById('languageSelect');
@@ -106,7 +133,19 @@ const Transcribe_demo = () => {
       const data = await response.json();
       const parsedTranscript = JSON.parse(data.transcript); // Parse the stringified JSON
       console.log('Parsed transcript:', parsedTranscript);
-      setSegments(Array.isArray(parsedTranscript.segments?.segments) ? parsedTranscript.segments.segments : []);
+      const rawSegments = Array.isArray(parsedTranscript.segments?.segments) ? parsedTranscript.segments.segments: [];
+
+      // Spellingcontrole per segment uitvoeren (asynchroon per stuk)
+      const segmentsWithSpelling = await Promise.all(
+        rawSegments.map(async (seg) => {
+          const issues = await checkSpelling(seg.chunk);
+          return {
+            ...seg,
+            spellingIssues: issues,
+          };
+        })
+      );
+      setSegments(segmentsWithSpelling);
     } catch (err) {
       setError(err.message);
       console.error('Transcription error:', err); // Log de fout
@@ -119,6 +158,7 @@ const Transcribe_demo = () => {
     <div>
       <h2>Transcribe Video Link</h2>
       <p>https://anderstaligen.s3.eu-central-1.amazonaws.com/3+inspectie+szw/Intro+inspectie+SZW.mp4</p>
+      <p>https://s3.eu-central-1.amazonaws.com/e-learning.swb.nl-prod/algemeen/Overeenkomst.mp4</p>
       <p>https://ollama.com/library/gemma3</p>
       <form onSubmit={handleTranscribeLinkSubmit}>
         <input
@@ -169,11 +209,37 @@ const Transcribe_demo = () => {
                 value={seg.duration}
                 onChange={(e) => handleSegmentChange(index, 'duration', e.target.value)}
               /></td>
-          <td><input 
+          {/* <td><input 
                 type="text" 
                 value={seg.chunk} 
                 onChange={(e) => handleSegmentChange(index, 'chunk', e.target.value)}
-              /></td>
+              /></td> */}
+<td>
+  <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+    <input
+      type="text"
+      style={{
+        borderColor: seg.spellingIssues?.length > 0 ? 'red' : '',
+        backgroundColor: seg.spellingIssues?.length > 0 ? '#ffe6e6' : ''
+      }}
+      value={seg.chunk}
+      onChange={(e) => handleSegmentChange(index, 'chunk', e.target.value)}
+    />
+    {seg.spellingIssues?.length > 0 && (
+      <div
+        title={seg.spellingIssues.map(issue => issue.replacements?.[0]?.value).filter(Boolean).join(', ')}
+        style={{
+          marginLeft: '4px',
+          color: 'red',
+          cursor: 'help',
+          fontWeight: 'bold'
+        }}
+      >
+        ⚠
+      </div>
+    )}
+  </div>
+</td>
           <td><input 
                 type="text" 
                 placeholder="Vertaling" 
