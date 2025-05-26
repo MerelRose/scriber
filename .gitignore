@@ -2,6 +2,3 @@ node_modules
 
 *.wav
 !spec/*.wav
-
-*.vtt
-!spec/*.vtt
