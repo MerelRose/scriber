@@ -1,0 +1,2 @@
+export const apikey = 'e91c254ad58860a02c788dfb5c1a65d6a8846ab1dc649631c7db16fef4af2dec';
+export const jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJHRkciLCJpYXQiOjE3NDgyNDMzOTEsImV4cCI6MTc0ODMyOTc5MX0.u41_8ug4oC5SBOl3fs2RaizFijHjsIBIMfxWGbTc0Ik';
