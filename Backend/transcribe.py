@@ -38,33 +38,35 @@ def transcribe(audio_path):
         end_raw = segment["end"]
         duration = end_raw - start_raw  # Totale duur van het segment
 
-        # Formatteer de tijdstempels naar een leesbaar formaat (bijv. mm:ss)
-        start = format_time(segment["start"])
-        end = format_time(segment["end"])
-
         # Haal de tekst uit het segment en verwijder eventuele spaties aan het begin/einde
         text = segment["text"].strip()
 
         # Splits de tekst in kleinere stukken van maximaal 10 woorden
         chunks = split_text_by_word_limit(text, 10)
 
-        chunk_count = len(chunks)
-        # Bereken de duur van elk tekststukje op basis van het totale segment
-        chunk_duration = duration / chunk_count
+        # Bereken het totaal aantal woorden in het segment
+        total_words = sum(len(chunk.split()) for chunk in chunks)
 
         # Verdeel het segment in kleinere stukjes met bijbehorende tijdstempels
-        for i, chunk in enumerate(chunks):
-            chunk_start_raw = start_raw + i * chunk_duration
-            chunk_end_raw = chunk_start_raw + chunk_duration
+        current_time = start_raw
+        for chunk in chunks:
+            word_count = len(chunk.split())
+            # Verhoudingsgewijze duur op basis van het aantal woorden
+            chunk_duration = (word_count / total_words) * duration
 
-            # Voeg elk stukje toe aan de output met starttijd, eindtijd, duur en tekst
+            chunk_start_raw = current_time
+            chunk_end_raw = chunk_start_raw + chunk_duration
+            duration_raw = chunk_duration
+
             output.append({
                 "start": format_time(chunk_start_raw),
                 "end": format_time(chunk_end_raw),
-                "duration": chunk_duration,
+                "duration": duration_raw,
                 "chunk": chunk
             })
 
+            current_time = chunk_end_raw  # Volgende chunk begint waar de vorige eindigde
+            
     # Geef de uiteindelijke lijst van gesegmenteerde transcripties terug
     return {"segments": output}
 
