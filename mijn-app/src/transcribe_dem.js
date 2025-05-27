@@ -58,6 +58,20 @@ const Transcribe_demo = () => {
     const result = await response.json();
     return result.matches;
   }
+  const checkAllSpelling = async () => {
+    const updatedSegments = await Promise.all(
+      segments.map(async (seg) => {
+        const spellingIssues = await checkSpelling(seg.chunk);
+        const spellingIssuesEN = await checkSpellingEN(seg.translated || '');
+        return {
+          ...seg,
+          spellingIssues,
+          spellingIssuesEN
+        };
+      })
+    );
+    setSegments(updatedSegments);
+  };
   
 
   const handleTranslate = async () => {
@@ -129,32 +143,32 @@ const Transcribe_demo = () => {
         throw new Error(`Error in transcription: ${errorText}`);
       }
 
-      // talen select
-      fetch('http://localhost:4000/talen', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': apikey,
-          'Authorization': `Bearer ${jwtToken}`,
-        }
-      })
-      .then(response => response.json())
-      .then(data => {
-        const select = document.getElementById('languageSelect');
-        data.forEach(lang => {
-          const option = document.createElement('option');
-          option.value = lang.afkorting;
-          option.textContent = lang.naam;
-          option.title = lang.afkorting;
+      // // talen select
+      // fetch('http://localhost:4000/talen', {
+      //   method: 'GET',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     'x-api-key': apikey,
+      //     'Authorization': `Bearer ${jwtToken}`,
+      //   }
+      // })
+      // .then(response => response.json())
+      // .then(data => {
+      //   const select = document.getElementById('languageSelect');
+      //   data.forEach(lang => {
+      //     const option = document.createElement('option');
+      //     option.value = lang.afkorting;
+      //     option.textContent = lang.naam;
+      //     option.title = lang.afkorting;
       
-          if (lang.naam === "ENGLISH") {
-            option.selected = true;
-          }
+      //     if (lang.naam === "ENGLISH") {
+      //       option.selected = true;
+      //     }
       
-          select.appendChild(option);
-        });
-      })
-      .catch(error => console.error('Fout bij ophalen talen:', error));      
+      //     select.appendChild(option);
+      //   });
+      // })
+      // .catch(error => console.error('Fout bij ophalen talen:', error));      
 
       const data = await response.json();
       const parsedTranscript = JSON.parse(data.transcript); // Parse the stringified JSON
@@ -201,10 +215,13 @@ const Transcribe_demo = () => {
 
       {segments.length > 0 && (
         <form onSubmit={(e) => { e.preventDefault(); handleTranslate(); }}>
-          <select id="languageSelect"></select>
-          <button type="submit">Vertaal</button>
+          {/* <select id="languageSelect"></select> */}
+          <button type="submit">Vertaal naar Engels</button>
         </form>
       )}
+
+      <button onClick={checkAllSpelling}>Spellingcontrole</button>
+
 
       {error && <p style={{ color: 'red' }}>{error}</p>} {/* Toon foutmelding */}
       <table>
@@ -267,12 +284,6 @@ const Transcribe_demo = () => {
               )}
             </div>
           </td>
-          {/* <td><input 
-                type="text" 
-                placeholder="Vertaling" 
-                value={seg.translated || ''}
-                onChange={(e) => handleSegmentChange(index, 'translated', e.target.value)}
-              /></td> */}
           <td>
             <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
               <input
@@ -283,6 +294,7 @@ const Transcribe_demo = () => {
                 }}
                 value={seg.translated}
                 onChange={(e) => handleSegmentChange(index, 'translated', e.target.value)}
+                id='text-en'
               />
               {seg.spellingIssuesEN?.length > 0 && (
                 <div
