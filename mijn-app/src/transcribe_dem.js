@@ -210,37 +210,38 @@ const Transcribe_demo = () => {
                 value={seg.duration}
                 onChange={(e) => handleSegmentChange(index, 'duration', e.target.value)}
               /></td>
-          {/* <td><input 
-                type="text" 
-                value={seg.chunk} 
+          <td>
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+              <input
+                type="text"
+                style={{
+                  borderColor: seg.spellingIssues?.length > 0 ? 'red' : '',
+                  backgroundColor: seg.spellingIssues?.length > 0 ? '#ffe6e6' : ''
+                }}
+                value={seg.chunk}
                 onChange={(e) => handleSegmentChange(index, 'chunk', e.target.value)}
-              /></td> */}
-<td>
-  <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-    <input
-      type="text"
-      style={{
-        borderColor: seg.spellingIssues?.length > 0 ? 'red' : '',
-        backgroundColor: seg.spellingIssues?.length > 0 ? '#ffe6e6' : ''
-      }}
-      value={seg.chunk}
-      onChange={(e) => handleSegmentChange(index, 'chunk', e.target.value)}
-    />
-    {seg.spellingIssues?.length > 0 && (
-      <div
-        title={seg.spellingIssues.map(issue => issue.replacements?.[0]?.value).filter(Boolean).join(', ')}
-        style={{
-          marginLeft: '4px',
-          color: 'red',
-          cursor: 'help',
-          fontWeight: 'bold'
-        }}
-      >
-        ⚠
-      </div>
-    )}
-  </div>
-</td>
+              />
+              {seg.spellingIssues?.length > 0 && (
+                <div
+                  title={seg.spellingIssues.map(issue => issue.replacements?.[0]?.value).filter(Boolean).join(', ')}
+                  style={{
+                    marginLeft: '4px',
+                    color: 'red',
+                    cursor: 'help',
+                    fontWeight: 'bold'
+                  }}
+                  onClick={async () => {
+                    const issues = await checkSpelling(seg.chunk);
+                    const updatedSegments = [...segments];
+                    updatedSegments[index].spellingIssues = issues;
+                    setSegments(updatedSegments);
+                  }}                  
+                >
+                  ⚠
+                </div>
+              )}
+            </div>
+          </td>
           <td><input 
                 type="text" 
                 placeholder="Vertaling" 
