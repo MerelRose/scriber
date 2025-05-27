@@ -52,7 +52,9 @@ def transcribe(audio_path):
         for chunk in chunks:
             word_count = len(chunk.split())
             # Verhoudingsgewijze duur op basis van het aantal woorden
-            chunk_duration = (word_count / total_words) * duration
+            # chunk_duration = (word_count / total_words) * duration
+            chunk_duration = round((word_count / total_words) * duration, 3)
+
 
             chunk_start_raw = current_time
             chunk_end_raw = chunk_start_raw + chunk_duration
