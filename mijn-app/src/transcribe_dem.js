@@ -43,6 +43,21 @@ const Transcribe_demo = () => {
     const result = await response.json();
     return result.matches;
   };
+
+  const checkSpellingEN = async (text) => {
+    const response = await fetch('https://api.languagetool.org/v2/check',{
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
+      body: new URLSearchParams({
+        text,
+        language: 'en',
+        disabledRules: 'UPPERCASE_SENTENCE_START'
+      })
+    });
+
+    const result = await response.json();
+    return result.matches;
+  }
   
 
   const handleTranslate = async () => {
@@ -75,8 +90,18 @@ const Transcribe_demo = () => {
         ...seg,
         translated: translatedChunks[index] || ''
       }));
+      const segmentsWithSpellingEN = await Promise.all(
+        updatedSegments.map(async (seg) => {
+          const issues = await checkSpellingEN(seg.translatedChunks);
+          return {
+            ...seg,
+            spellingIssuesEN: issues,
+          };
+        })
+      );
+      setSegments(segmentsWithSpellingEN);
   
-      setSegments(updatedSegments);
+      // setSegments(updatedSegments);
     } catch (err) {
       setError(err.message);
       console.error('Vertaalfout:', err);
@@ -242,12 +267,44 @@ const Transcribe_demo = () => {
               )}
             </div>
           </td>
-          <td><input 
+          {/* <td><input 
                 type="text" 
                 placeholder="Vertaling" 
                 value={seg.translated || ''}
                 onChange={(e) => handleSegmentChange(index, 'translated', e.target.value)}
-              /></td>
+              /></td> */}
+          <td>
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+              <input
+                type="text"
+                style={{
+                  borderColor: seg.spellingIssuesEN?.length > 0 ? 'red' : '',
+                  backgroundColor: seg.spellingIssuesEN?.length > 0 ? '#ffe6e6' : ''
+                }}
+                value={seg.translated}
+                onChange={(e) => handleSegmentChange(index, 'translated', e.target.value)}
+              />
+              {seg.spellingIssuesEN?.length > 0 && (
+                <div
+                  title={seg.spellingIssuesEN.map(issue => issue.replacements?.[0]?.value).filter(Boolean).join(', ')}
+                  style={{
+                    marginLeft: '4px',
+                    color: 'red',
+                    cursor: 'help',
+                    fontWeight: 'bold'
+                  }}
+                  onClick={async () => {
+                    const issues = await checkSpellingEN(seg.translated);
+                    const updatedSegments = [...segments];
+                    updatedSegments[index].spellingIssuesEN = issues;
+                    setSegments(updatedSegments);
+                  }}                  
+                >
+                  ⚠
+                </div>
+              )}
+            </div>
+          </td>
           </tr>
         ))}
         </tbody>
