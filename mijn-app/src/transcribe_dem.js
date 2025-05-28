@@ -77,10 +77,10 @@ const Transcribe_demo = () => {
   const handleTranslate = async () => {
     const select = document.getElementById('languageSelect');
     // const targetLanguage = select.value;
-    const targetLanguage = "Engels";
+    const targetLanguage = "Frans";
   
     const chunks = segments.map(seg => seg.chunk);
-  
+  // gemma3
     try {
       const response = await fetch('http://localhost:4000/translate/mistral', {
         method: 'POST',
@@ -199,7 +199,7 @@ const Transcribe_demo = () => {
       <h2>Transcribe Video Link</h2>
       <p>https://anderstaligen.s3.eu-central-1.amazonaws.com/3+inspectie+szw/Intro+inspectie+SZW.mp4</p>
       <p>https://s3.eu-central-1.amazonaws.com/e-learning.swb.nl-prod/algemeen/Overeenkomst.mp4</p>
-      <p>https://ollama.com/library/gemma3</p>
+      <p>https://ollama.com/library/mixtral</p>
       <form onSubmit={handleTranscribeLinkSubmit}>
         <input
           type="text"
@@ -229,7 +229,7 @@ const Transcribe_demo = () => {
           <tr>
             <th>Start</th>
             <th>End</th>
-            <th>Duration</th>
+            <th>Duration (sec)</th>
             <th>Tekst (nl)</th>
             <th>Tekst (vertaald)</th>
             </tr>
@@ -294,7 +294,6 @@ const Transcribe_demo = () => {
                 }}
                 value={seg.translated}
                 onChange={(e) => handleSegmentChange(index, 'translated', e.target.value)}
-                id='text-en'
               />
               {seg.spellingIssuesEN?.length > 0 && (
                 <div

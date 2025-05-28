@@ -188,7 +188,7 @@ router.post('/translateh', validateApiKey, validateToken, async (req, res) => {
             },
             body: JSON.stringify({
               model: 'mistral',
-              prompt: `Vertaal dit naar ${to}. Voeg absoluut geen uitleg, informatie of alternatieven toe. Geef alleen de vertaalde tekst terug:\n${chunk}`,
+              prompt: `Vertaal dit naar ${to}. Voeg absoluut geen uitleg, informatie of alternatieven toe. Geef alleen de vertaalde tekst terug van de opgegeven tekst:\n${chunk}`,
               temperature: 0.2,
               stream: false
             })
