@@ -3,6 +3,12 @@ node_modules
 *.wav
 !spec/*.wav
 
+*.mp4
+!spec/*.mp4
+
+*.json
+!spec/*.json
+
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
