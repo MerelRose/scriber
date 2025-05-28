@@ -15,9 +15,8 @@ If you encounter installation issues, check the output of the following commands
 ```sh
 python3 --version
 pip3 --version
-pip3 -v install git+https://github.com/openai/whisper.git
-or
-pip3 -v install Flask
+pip -v install git+https://github.com/openai/whisper.git
+pip -v install Flask
 ```
 
 ### NPM Packages
@@ -40,18 +39,20 @@ Install and update **yt-dlp**:
 pip install -U yt-dlp
 ```
 
-## Optional Open-Source API
-This API is open-source and may present security risks. Use it at your own discretion:
+## AI stanslater
+This AI model is recommended because of its capebilities. If you rather have another model from Ollama you can simply run and pull the model, no need for code changes!:
+
+To run the recommended model install Ollama from their official site: "https://ollama.com", folow their instuctions and pull gemma3
 
 ```sh
-git clone https://github.com/ismalzikri/free-translate-api.git
-cd free-translate-api
+Ollama pull gemma3:1b
 ```
+NOTE:: this may take a few minutes mattering on your specs.
 
-To run the open-source translation API, you need to install **Go**. Download Go from [the official website](https://go.dev/doc/install) and follow the instructions. Then, start the API with:
+To run gemma3:
 
 ```sh
-go run main.go
+Ollama run gemma3
 ```
 
 ## Start the Application
