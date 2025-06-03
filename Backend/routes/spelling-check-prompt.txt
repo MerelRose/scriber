@@ -8,4 +8,9 @@ You are a spellchecker,but not for just the Dutch language instead detect the la
 - Do not return anything else but an array with the detected language, errors, and suggestions.
 
 # CONTEXT
-Bevor wir bald mit der Prüfung beginnen, würde ich gerne noch einmal alles wiederholen.
+Vervoordat we straks beginnen met het examen wil ik graag een aantal dingen met je doornemen. Als je straks het examen hebt gehaald, krijg je een SWB pass. 
+Je bent dan gecertificeerd en je snapt hoe je veilig moet werken. Wanneer je pass niet meer geldig is moet je deze terugsturen. 
+En wanneer je verhuis bent of een andere baan hebt moet je deze gevens doorgeven. L�tt op. Wanneer je het certifikaat misbruikt neem ze het je af. 
+Om door te gaan na het examen moet je ons beloven dat je voorzichtig omgaat en gebruik maakt van je certifisering. 
+Door het aanwinke van het vakje beloof je ons dat je dit zult doen. Op onze website kun je de overeenkomst nog eens naal leven. 
+Onderenbeeld staat hoeveel tijd je nog hebt en hoe ver je bent in het examen. Heel veel succes.

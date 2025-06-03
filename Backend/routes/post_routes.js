@@ -166,11 +166,6 @@ router.post('/translateh', validateApiKey, validateToken, async (req, res) => {
     }
   });
 
-  
-// mistral ai model. taal support, met opmerkingen/kwaliteit:
-// (3) engels & frans (beide zijn zeer goed)
-// (2) duits, spaans & taliaans (alle 3 zijn goed)
-// (1) nederlands(redelijk, soms inconsistent) & portugees(acceptabel)
   router.post('/translate/mistral', async (req, res) => {
     const { text, to } = req.body;
   
@@ -187,8 +182,18 @@ router.post('/translateh', validateApiKey, validateToken, async (req, res) => {
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-              model: 'mistral',
-              prompt: `Vertaal dit naar ${to}. Voeg absoluut geen uitleg, informatie of alternatieven toe. Geef alleen de vertaalde tekst terug van de opgegeven tekst:\n${chunk}`,
+              model: 'gemma3',
+              prompt: `You are a translator, you translate from Dutch to ${to}. Assist with the following instructions:
+
+                        # INSTRUCTIONS
+                        - Read the entire sentence, take note of quotations.
+                        - Translate the entire sentence, do not add any aditional quatations to the end of the sentence.
+                        - Return the text that you have translated, if you do not know the asked or given language then give back an array with 'The given or asked language is not supported'.
+                        - Do not make suggestions on the array of strings or any explanations.
+                        - Do not return anything else but the translated text.
+
+                        # CONTEXT
+                        \n${chunk} `,
               temperature: 0.2,
               stream: false
             })

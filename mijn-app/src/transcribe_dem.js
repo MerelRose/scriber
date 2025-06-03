@@ -77,7 +77,7 @@ const Transcribe_demo = () => {
   const handleTranslate = async () => {
     const select = document.getElementById('languageSelect');
     // const targetLanguage = select.value;
-    const targetLanguage = "Frans";
+    const targetLanguage = "English";
   
     const chunks = segments.map(seg => seg.chunk);
   // gemma3
@@ -202,6 +202,7 @@ const Transcribe_demo = () => {
       <p>https://ollama.com/library/mixtral</p>
       <form onSubmit={handleTranscribeLinkSubmit}>
         <input
+          name='URL'
           type="text"
           value={videoUrl}
           onChange={handleVideoUrlChange}
@@ -238,15 +239,18 @@ const Transcribe_demo = () => {
         {segments.map((seg, index) => (
           <tr key={index}>
           <td><input 
+                name='Start timestamp'
                 type="text" 
                 value={seg.start} 
                 onChange={(e) => handleSegmentChange(index, 'start', e.target.value)}
               /></td>
           <td><input type="text" 
+                name='End timestamp'
                 value={seg.end} 
                 onChange={(e) => handleSegmentChange(index, 'end', e.target.value)}
               /></td>
           <td><input 
+                name='Duration'
                 type="text" 
                 placeholder="Duration" 
                 value={seg.duration}
@@ -255,6 +259,7 @@ const Transcribe_demo = () => {
           <td>
             <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
               <input
+                name='Transcriptie'
                 type="text"
                 style={{
                   borderColor: seg.spellingIssues?.length > 0 ? 'red' : '',
@@ -287,6 +292,7 @@ const Transcribe_demo = () => {
           <td>
             <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
               <input
+                name='Vertaalde stanscriptie'
                 type="text"
                 style={{
                   borderColor: seg.spellingIssuesEN?.length > 0 ? 'red' : '',
