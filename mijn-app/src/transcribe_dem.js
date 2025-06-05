@@ -10,18 +10,6 @@ const Transcribe_demo = () => {
   const handleVideoUrlChange = (e) => {
     setVideoUrl(e.target.value);
   };
-// handle change met spelling controlle, werkt niet goed
-  // const handleSegmentChange = async (index, field, value) => {
-  //   const updatedSegments = [...segments];
-  //   updatedSegments[index][field] = value;
-  
-  //   if (field === 'chunk') {
-  //     const matches = await checkSpelling(value);
-  //     updatedSegments[index].spellingIssues = matches;
-  //   }
-  
-  //   setSegments(updatedSegments);
-  // };
 
   const handleSegmentChange = (index, field, value) => {
     const updatedSegments = [...segments];
@@ -30,20 +18,21 @@ const Transcribe_demo = () => {
   };  
 
   const checkSpelling = async (text) => {
-    const response = await fetch('https://api.languagetool.org/v2/check', {
+    const response = await fetch('http://localhost:4000/spelling/qwen', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({
-        text,
-        language: 'nl',
-        disabledRules: 'UPPERCASE_SENTENCE_START'
-      })
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apikey,
+        'Authorization': `Bearer ${jwtToken}`,
+      },
+      body: JSON.stringify({ text: [text] })
     });
   
     const result = await response.json();
-    return result.matches;
+    console.log('Qwen spelling response:', result);
+    return result.corrections || []; 
   };
-
+  
   const checkSpellingEN = async (text) => {
     const response = await fetch('https://api.languagetool.org/v2/check',{
       method: 'POST',
@@ -141,34 +130,7 @@ const Transcribe_demo = () => {
       if (!response.ok) {
         const errorText = await response.text(); // Verkrijg de fouttekst
         throw new Error(`Error in transcription: ${errorText}`);
-      }
-
-      // // talen select
-      // fetch('http://localhost:4000/talen', {
-      //   method: 'GET',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //     'x-api-key': apikey,
-      //     'Authorization': `Bearer ${jwtToken}`,
-      //   }
-      // })
-      // .then(response => response.json())
-      // .then(data => {
-      //   const select = document.getElementById('languageSelect');
-      //   data.forEach(lang => {
-      //     const option = document.createElement('option');
-      //     option.value = lang.afkorting;
-      //     option.textContent = lang.naam;
-      //     option.title = lang.afkorting;
-      
-      //     if (lang.naam === "ENGLISH") {
-      //       option.selected = true;
-      //     }
-      
-      //     select.appendChild(option);
-      //   });
-      // })
-      // .catch(error => console.error('Fout bij ophalen talen:', error));      
+      }  
 
       const data = await response.json();
       const parsedTranscript = JSON.parse(data.transcript); // Parse the stringified JSON

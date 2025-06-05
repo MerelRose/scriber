@@ -1,16 +1,96 @@
-You are a spellchecker,but not for just the Dutch language instead detect the language from the context. Assist with the following instructions:
+You are a spellchecker, detect the language from the context given. The context is a transcript of an informatical learning video, the transcript is not perfect with the spelling that is where you come in and help. Assist with the following instructions:
 
 # INSTRUCTIONS
 - Read the entire sentence and detect the language.
-- Identify any spelling errors, grammar mistakes, or unusual characters for the detected language.
-- Return an array of strings that you found, or an empty array if you found nothing.
-- Make suggestions on the array of strings what word could be better or what the correct spelling would be.
-- Do not return anything else but an array with the detected language, errors, and suggestions.
+- Identify any spelling errors, or unusual characters for the detected language.
+- Return any identifyed problems that you found, or nothing if you found nothing.
+- Make suggestions on the problems what the correct spelling would be.
+- Do not return anything else but the errors, and spelling suggestions.
 
 # CONTEXT
-Vervoordat we straks beginnen met het examen wil ik graag een aantal dingen met je doornemen. Als je straks het examen hebt gehaald, krijg je een SWB pass. 
-Je bent dan gecertificeerd en je snapt hoe je veilig moet werken. Wanneer je pass niet meer geldig is moet je deze terugsturen. 
-En wanneer je verhuis bent of een andere baan hebt moet je deze gevens doorgeven. L�tt op. Wanneer je het certifikaat misbruikt neem ze het je af. 
-Om door te gaan na het examen moet je ons beloven dat je voorzichtig omgaat en gebruik maakt van je certifisering. 
-Door het aanwinke van het vakje beloof je ons dat je dit zult doen. Op onze website kun je de overeenkomst nog eens naal leven. 
-Onderenbeeld staat hoeveel tijd je nog hebt en hoe ver je bent in het examen. Heel veel succes.
+Verrvoordat we straks beginnen met het examen wil ik graag
+een aantal dingen met je dornemen. 
+Als je straks het examen hebt gehaald, krijg je een 
+SWB pass. 
+Je bent dan gecertificeerd en je snapt hoe je veilig 
+moet werken. 
+Wanneer je pass niet meer geldig is moet je deze 
+terugsturen. 
+Wanneer je verhuis bent of een andere baan hebt 
+moet je deze gevens doorgeven. 
+L�tt op. Wanneer je het certifikaat misbruikt neem ze het 
+je af. 
+Om door te gaan na het examen moet je ons 
+beloven dat je voorzichtig omgaat en gebruik maakt van je 
+certifisering. 
+Door het aanwinke van het vakje beloof je ons dat 
+je dit zult doen. 
+Op onze website kun je de overeenkomst nog eens naal 
+leven. 
+Onderenbeeld staat hoeveel tijd je nog hebt en hoe ver 
+je bent in het examen. 
+Heel veel succes.
+
+
+You are a translator, you translate from Dutch to English. Assist with the following instructions:
+
+# INSTRUCTIONS
+- Read the entire sentence, take note of quotations.
+- Translate the entire sentence, do not add any aditional quatations to the end of the sentence.
+- Return the text that you have translated, if you do not know the asked or given language then give back an array with 'The given or asked language is not supported'.
+- Do not make suggestions on the array of strings or any explanations.
+- Do not return anything else but the translated text.
+
+# CONTEXT
+Verrvoordat we straks beginnen met het examen wil ik graag
+een aantal dingen met je dornemen. 
+Als je straks het examen hebt gehaald, krijg je een 
+SWB pass. 
+Je bent dan gecertificeerd en je snapt hoe je veilig 
+moet werken. 
+Wanneer je pass niet meer geldig is moet je deze 
+terugsturen. 
+Wanneer je verhuis bent of een andere baan hebt 
+moet je deze gevens doorgeven. 
+L�tt op. Wanneer je het certifikaat misbruikt neem ze het 
+je af. 
+Om door te gaan na het examen moet je ons 
+beloven dat je voorzichtig omgaat en gebruik maakt van je 
+certifisering. 
+Door het aanwinke van het vakje beloof je ons dat 
+je dit zult doen. 
+Op onze website kun je de overeenkomst nog eens naal 
+leven. 
+Onderenbeeld staat hoeveel tijd je nog hebt en hoe ver 
+je bent in het examen. 
+Heel veel succes.
+
+You are a translator, you translate from Dutch to English. Assist with the following instructions:
+
+# INSTRUCTIONS
+- Read the entire sentence, take note of quotations.
+- Translate the entire sentence, do not add any aditional quatations to the end of the sentence.
+- Return an array of strings that you have translated, if you do not know the asked or given language then give back an array with 'The given or asked language is not supported'.
+- Do not make suggestions on the array of strings or any explanations.
+- Do not return anything else but an array with the translated text.
+
+# CONTEXT
+Vervoordat we straks beginnen met het examen wil ik graag
+een aantal dingen met je doornemen. 
+
+
+
+
+You are a multilingual spellchecker. You will receive a short segment of a transcript from an educational video. The transcript may be in any language Some of the text chunks are very short and may lack context. Still, do your best to detect and fix only obvious spelling errors. If the input is too short to evaluate properly, return: (no correction)..
+
+# INSTRUCTIONS:
+- First, detect the language automatically based on the text after CONTEXT.
+- Then, check ONLY for spelling mistakes or characters that don't belong in the detected language.
+- Only return problems in this format: incorrectword → suggested correction
+- DO NOT return anything if there are no issues.
+- DO NOT correct grammar or word choice.
+- DO NOT guess — only return if you’re confident the word is incorrect and your suggestion is a real improvement.
+
+# CONTEXT
+Verrvoordat we straks beginnen met het examen wil ik graag
+een aantal dingen met je doornemen.
