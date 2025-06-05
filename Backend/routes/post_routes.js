@@ -21,6 +21,7 @@ const router = express.Router();
 const upload = multer({ dest: 'uploads/' });
 
 import pkg from 'yt-dlp-wrap';
+import { type } from 'os';
 const YTDlpWrap = pkg.default;
 
 const __filename = fileURLToPath(import.meta.url);
@@ -197,16 +198,6 @@ router.post('/transcribe', validateApiKey, validateToken, upload.single('audio')
                           - DO NOT correct grammar or word choice.
                           - DO NOT guess — only return if you’re confident the word is incorrect and your suggestion is a real improvement.
                           
-                          # OUTPUT FORMAT:
-                          Return a JSON array like this:
-                          [
-                            {
-                              "original": "mispelledword",
-                              "suggestion": "misspelledword",
-                              "position": 14
-                            }
-                          ]
-                          
                           # CONTEXT
                           ${chunk}
                           `;
@@ -229,12 +220,24 @@ router.post('/transcribe', validateApiKey, validateToken, upload.single('audio')
                 },
               ],
               temperature: 0.2,
+              format: {
+                "properties": {
+                    "spelling-error": {
+                      "type": "array",
+                      "items:": {
+                        "type": "string"
+                      }
+                    }
+                }
+              },
               stream: false,
             }),
           });
   
           const data = await response.json();
           const output = data?.message?.content?.trim() || '';
+          console.log('output:' + output);
+
   
           let parsed = [];
           try {

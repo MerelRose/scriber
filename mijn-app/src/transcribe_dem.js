@@ -17,21 +17,29 @@ const Transcribe_demo = () => {
     setSegments(updatedSegments);
   };  
 
-  const checkSpelling = async (text) => {
-    const response = await fetch('http://localhost:4000/spelling/qwen', {
+  async function checkSpelling(text) {
+    const response = await fetch('/api/spellcheck', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apikey,
-        'Authorization': `Bearer ${jwtToken}`,
-      },
-      body: JSON.stringify({ text: [text] })
+      body: JSON.stringify({ text }),
+      headers: { 'Content-Type': 'application/json' }
     });
   
-    const result = await response.json();
-    console.log('Qwen spelling response:', result);
-    return result.corrections || []; 
-  };
+    const data = await response.json();
+  
+    const rawIssues = data["spelling-error"] || [];
+  
+    // Convert "verhuis → verhuisd" naar { original: "verhuis", suggestion: "verhuisd" }
+    const issues = rawIssues.map(item => {
+      const parts = item.split('→').map(p => p.trim());
+      if (parts.length === 2) {
+        return { original: parts[0], suggestion: parts[1] };
+      }
+      return null;
+    }).filter(Boolean); // Verwijder nulls
+  
+    return issues;
+  }
+  
   
   const checkSpellingEN = async (text) => {
     const response = await fetch('https://api.languagetool.org/v2/check',{
@@ -230,9 +238,13 @@ const Transcribe_demo = () => {
                 value={seg.chunk}
                 onChange={(e) => handleSegmentChange(index, 'chunk', e.target.value)}
               />
-              {seg.spellingIssues?.length > 0 && (
+
+              {seg.spellingIssues?.some(issue => issue.original && issue.suggestion) && (
                 <div
-                  title={seg.spellingIssues.map(issue => issue.replacements?.[0]?.value).filter(Boolean).join(', ')}
+                  title={seg.spellingIssues
+                    .filter(issue => issue.original && issue.suggestion)
+                    .map(issue => `${issue.original} → ${issue.suggestion}`)
+                    .join(', ')}
                   style={{
                     marginLeft: '4px',
                     color: 'red',
@@ -244,7 +256,7 @@ const Transcribe_demo = () => {
                     const updatedSegments = [...segments];
                     updatedSegments[index].spellingIssues = issues;
                     setSegments(updatedSegments);
-                  }}                  
+                  }}
                 >
                   ⚠
                 </div>
