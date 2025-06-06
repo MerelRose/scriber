@@ -21,7 +21,7 @@ const Transcribe_demo = () => {
     try {
       const response = await fetch('http://localhost:4000/spelling/qwen', {
         method: 'POST',
-        body: JSON.stringify({ text: [text] }),  // 👈 text als array
+        body: JSON.stringify({ text: [text] }),
         headers: {
           'Content-Type': 'application/json',
           'x-api-key': apikey,
@@ -35,9 +35,17 @@ const Transcribe_demo = () => {
       }
   
       const data = await response.json();
-      const rawIssues = data["spelling-error"] || [];
+      const rawIssues = data.corrections || [];
+      console.table(rawIssues);
   
       const issues = rawIssues.map(item => {
+
+        // { original: "", spellingIssues: [ { "word": "", "suggestion": "" } ]}
+
+        return { original: item.spellingIssues[0]?.word, suggestion: item.spellingIssues[0]?.suggestion };
+
+
+
         if (typeof item === 'string') {
           const parts = item.split('→').map(p => p.trim());
           if (parts.length === 2) {
@@ -72,14 +80,28 @@ const Transcribe_demo = () => {
     });
 
     const result = await response.json();
+    if (text.indexOf(' yu ') > -1) {
+      console.log(result, 'yuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu');
+
+    }
+
     return result.matches;
   }
   const checkAllSpelling = async () => {
+    console.log("checkAllSpelling started");
     const updatedSegments = await Promise.all(
       segments.map(async (seg, i) => {
         const spellingIssues = await checkSpelling(seg.chunk);
-        console.log(`segment ${i} - issues:`, spellingIssues);
+        console.log(seg.translated, 'Vertaalde waarde (?)')
+
         const spellingIssuesEN = await checkSpellingEN(seg.translated || '');
+        console.log(`segment ${i} - issues NL: ${spellingIssues.length} - issues EN: ${spellingIssuesEN.length}`);
+
+        console.log('---------------------------')
+        console.log(spellingIssues, 'nl', Array.isArray(spellingIssues));
+        console.log(spellingIssuesEN, 'en', Array.isArray(spellingIssuesEN));
+        console.log('---------------------------')
+
         return {
           ...seg,
           spellingIssues,
@@ -87,6 +109,8 @@ const Transcribe_demo = () => {
         };
       })
     );
+
+    console.log(updatedSegments);
     setSegments(updatedSegments);
   };
   
@@ -124,6 +148,7 @@ const Transcribe_demo = () => {
       }));
       const segmentsWithSpellingEN = await Promise.all(
         updatedSegments.map(async (seg) => {
+          console.log(seg.translated, 'Vertaalde waarde (?)')
           const issues = await checkSpellingEN(seg.translated);
           return {
             ...seg,
@@ -249,8 +274,6 @@ const Transcribe_demo = () => {
               /></td>
           <td>
             <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-            <pre>{JSON.stringify(seg.spellingIssues, null, 2)}</pre>
-
               <input
                 name='Transcriptie'
                 type="text"
@@ -261,13 +284,12 @@ const Transcribe_demo = () => {
                 value={seg.chunk}
                 onChange={(e) => handleSegmentChange(index, 'chunk', e.target.value)}
               />
-
               {seg.spellingIssues?.some(issue => issue.original && issue.suggestion) && (
                 <div
-                  title={seg.spellingIssues
-                    .filter(issue => issue.original && issue.suggestion)
-                    .map(issue => `${issue.original} → ${issue.suggestion}`)
-                    .join(', ')}
+                title={seg.spellingIssues
+                  .filter(issue => issue.original && issue.suggestion)
+                  .map(issue => `${issue.original} → ${issue.suggestion}`)
+                  .join('\n')}                
                   style={{
                     marginLeft: '4px',
                     color: 'red',

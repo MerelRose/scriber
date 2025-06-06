@@ -157,7 +157,7 @@ router.post('/transcribe', validateApiKey, validateToken, upload.single('audio')
                         - Do not return anything else but the translated text.
 
                         # CONTEXT
-                        \n${chunk} `,
+                        ${chunk} `,
               temperature: 0.2,
               stream: false
             })
@@ -189,15 +189,21 @@ router.post('/transcribe', validateApiKey, validateToken, upload.single('audio')
       const corrections = await Promise.all(
         text.map(async (chunk) => {
           const prompt = `
-                          You are a multilingual spellchecker. You will receive a short segment of a transcript from an educational video. The transcript may be in any language. Some of the text chunks are very short and may lack context. Still, do your best to detect and fix only obvious spelling errors. If the input is too short to evaluate properly, return: (no correction).
-                          
+                          You are a multilingual spellchecker. You will receive a short segment of a transcript from an educational video. The transcript may be in any language. Some of the text chunks are very short and may lack context. Still, do your best to detect and fix only obvious spelling errors. If the input is too short to evaluate properly, or if there are no spelling mistakes, return {"spelling-error": []}. Return only valid JSON. Do not explain anything.
+
                           # INSTRUCTIONS:
                           - First, detect the language automatically based on the text after CONTEXT.
                           - Then, check ONLY for spelling mistakes or characters that don't belong in the detected language.
-                          - DO NOT return anything if there are no issues.
                           - DO NOT correct grammar or word choice.
-                          - DO NOT guess — only return if you’re confident the word is incorrect and your suggestion is a real improvement.
-                          
+                          - DO NOT guess — only return if you're confident the word is incorrect and your suggestion is a real improvement.
+                          - Return only valid JSON without extra whitespace or new lines.
+                          - Return exactly this structure every time:
+                            {
+                              "spelling-error": [
+                                { "word": "wrongWord", "suggestion": "correctWord" }
+                              ]
+                            }
+
                           # CONTEXT
                           ${chunk}
                           `;
@@ -208,7 +214,7 @@ router.post('/transcribe', validateApiKey, validateToken, upload.single('audio')
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              model: 'qwen3:14b',
+              model: 'gemma3:12b',
               messages: [
                 {
                   role: 'system',
@@ -221,38 +227,58 @@ router.post('/transcribe', validateApiKey, validateToken, upload.single('audio')
               ],
               temperature: 0.2,
               format: {
+                "type": "object",
                 "properties": {
-                    "spelling-error": {
-                      "type": "array",
-                      "items:": {
-                        "type": "string"
-                      }
+                  "spelling-error": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "word": { "type": "string" },
+                        "suggestion": { "type": "string" }
+                      },
+                      "required": ["word", "suggestion"]
                     }
+                  }
                 }
-              },
+                // Ik wil: {"spelling-error": [ {"word": "", "suggestion": ""}, ... ]}
+              }
+              ,
               stream: false,
             }),
           });
   
           const data = await response.json();
-          const output = data?.message?.content?.trim() || '';
+          const output = (data?.message?.content || '').trim();
           console.log('output:' + output);
+          console.log(data);
 
-  
           let parsed = [];
           try {
-            const match = output.match(/\[\s*\{[\s\S]*?\}\s*\]/); 
-            if (match) {
-              parsed = JSON.parse(match[0]);
-            } else if (output.toLowerCase().includes('(no correction)')) {
-              parsed = [];
+            const cleaned = output.replace(/[\n\r]+/g, '').trim();
+            
+            if (cleaned.startsWith('{') && cleaned.endsWith('}')) {
+              console.log('Geldige JSON gedetecteerd:', cleaned);
+              const json = JSON.parse(cleaned);
+          
+              if (
+                json &&
+                typeof json === 'object' &&
+                Array.isArray(json["spelling-error"])
+              ) {
+                parsed = json["spelling-error"].map(entry => ({
+                  word: entry.word?.trim(),
+                  suggestion: entry.suggestion?.trim()
+                }));
+              } else {
+                console.warn('JSON zonder geldige spelling-error array:', json);
+              }
             } else {
-              console.warn('Geen JSON herkend in:', output);
+              console.warn('Geen correcte JSON herkend:', cleaned);
             }
           } catch (err) {
-            console.error('Fout bij JSON-parsen van output:', output);
-          }
-  
+            console.error('Fout bij JSON-parsen van output:', cleaned, err);
+          } 
           return {
             original: chunk,
             spellingIssues: parsed,

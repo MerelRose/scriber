@@ -48,7 +48,7 @@ app.use((req, res, next) => {
 const limiter = rateLimit({
     // min sec mil
     windowMs: 15 * 60 * 1000,
-    max: 100, 
+    max: 500, 
     message: "Too many requests from this IP, please try again after some time",
   });
   
