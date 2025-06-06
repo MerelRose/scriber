@@ -178,7 +178,7 @@ router.post('/transcribe', validateApiKey, validateToken, upload.single('audio')
     }
   });
 
-  router.post('/spelling/qwen', async (req, res) => {
+  router.post('/spelling/qwen', validateApiKey, validateToken, async (req, res) => {
     const { text } = req.body;
   
     if (!Array.isArray(text)) {

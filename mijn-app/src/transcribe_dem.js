@@ -18,26 +18,45 @@ const Transcribe_demo = () => {
   };  
 
   async function checkSpelling(text) {
-    const response = await fetch('/api/spellcheck', {
-      method: 'POST',
-      body: JSON.stringify({ text }),
-      headers: { 'Content-Type': 'application/json' }
-    });
+    try {
+      const response = await fetch('http://localhost:4000/spelling/qwen', {
+        method: 'POST',
+        body: JSON.stringify({ text: [text] }),  // 👈 text als array
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apikey,
+          'Authorization': `Bearer ${jwtToken}`
+        }
+      });
   
-    const data = await response.json();
-  
-    const rawIssues = data["spelling-error"] || [];
-  
-    // Convert "verhuis → verhuisd" naar { original: "verhuis", suggestion: "verhuisd" }
-    const issues = rawIssues.map(item => {
-      const parts = item.split('→').map(p => p.trim());
-      if (parts.length === 2) {
-        return { original: parts[0], suggestion: parts[1] };
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`API fout: ${errorText}`);
       }
-      return null;
-    }).filter(Boolean); // Verwijder nulls
   
-    return issues;
+      const data = await response.json();
+      const rawIssues = data["spelling-error"] || [];
+  
+      const issues = rawIssues.map(item => {
+        if (typeof item === 'string') {
+          const parts = item.split('→').map(p => p.trim());
+          if (parts.length === 2) {
+            return { original: parts[0], suggestion: parts[1] };
+          }
+        } else if (item && typeof item === 'object') {
+          return {
+            original: item.original || item.word || '',
+            suggestion: item.suggestion || item.correct || '',
+          };
+        }
+        return null;
+      }).filter(issue => issue?.original && issue?.suggestion && issue.original !== issue.suggestion);      
+  
+      return issues;
+    } catch (error) {
+      console.error('Fout in checkSpelling:', error);
+      throw error;
+    }
   }
   
   
@@ -57,8 +76,9 @@ const Transcribe_demo = () => {
   }
   const checkAllSpelling = async () => {
     const updatedSegments = await Promise.all(
-      segments.map(async (seg) => {
+      segments.map(async (seg, i) => {
         const spellingIssues = await checkSpelling(seg.chunk);
+        console.log(`segment ${i} - issues:`, spellingIssues);
         const spellingIssuesEN = await checkSpellingEN(seg.translated || '');
         return {
           ...seg,
@@ -69,6 +89,7 @@ const Transcribe_demo = () => {
     );
     setSegments(updatedSegments);
   };
+  
   
 
   const handleTranslate = async () => {
@@ -103,13 +124,13 @@ const Transcribe_demo = () => {
       }));
       const segmentsWithSpellingEN = await Promise.all(
         updatedSegments.map(async (seg) => {
-          const issues = await checkSpellingEN(seg.translatedChunks);
+          const issues = await checkSpellingEN(seg.translated);
           return {
             ...seg,
             spellingIssuesEN: issues,
           };
         })
-      );
+      );      
       setSegments(segmentsWithSpellingEN);
   
       // setSegments(updatedSegments);
@@ -228,6 +249,8 @@ const Transcribe_demo = () => {
               /></td>
           <td>
             <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+            <pre>{JSON.stringify(seg.spellingIssues, null, 2)}</pre>
+
               <input
                 name='Transcriptie'
                 type="text"
