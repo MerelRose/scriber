@@ -40,25 +40,43 @@ const Transcribe_demo = () => {
   
       const issues = rawIssues.map(item => {
 
-        // { original: "", spellingIssues: [ { "word": "", "suggestion": "" } ]}
+        return { original: item.spellingIssues[0]?.word, suggestion: item.spellingIssues[0]?.suggestion };
+
+      }).filter(issue => issue?.original && issue?.suggestion && issue.original !== issue.suggestion);      
+  
+      return issues;
+    } catch (error) {
+      console.error('Fout in checkSpelling:', error);
+      throw error;
+    }
+  }
+
+  async function checkSpellingTranslated(text) {
+    try {
+      const response = await fetch('http://localhost:4000/spelling/qwen', {
+        method: 'POST',
+        body: JSON.stringify({ text: [text] }),
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apikey,
+          'Authorization': `Bearer ${jwtToken}`
+        }
+      });
+  
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`API fout: ${errorText}`);
+      }
+  
+      const data = await response.json();
+      const rawIssues = data.corrections || [];
+      console.table(rawIssues);
+  
+      const issues = rawIssues.map(item => {
 
         return { original: item.spellingIssues[0]?.word, suggestion: item.spellingIssues[0]?.suggestion };
 
-
-
-        if (typeof item === 'string') {
-          const parts = item.split('→').map(p => p.trim());
-          if (parts.length === 2) {
-            return { original: parts[0], suggestion: parts[1] };
-          }
-        } else if (item && typeof item === 'object') {
-          return {
-            original: item.original || item.word || '',
-            suggestion: item.suggestion || item.correct || '',
-          };
-        }
-        return null;
-      }).filter(issue => issue?.original && issue?.suggestion && issue.original !== issue.suggestion);      
+      }).filter(issue => issue?.original && issue?.suggestion && issue.original !== issue.suggestion);     
   
       return issues;
     } catch (error) {
@@ -80,13 +98,9 @@ const Transcribe_demo = () => {
     });
 
     const result = await response.json();
-    if (text.indexOf(' yu ') > -1) {
-      console.log(result, 'yuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu');
-
-    }
-
     return result.matches;
   }
+
   const checkAllSpelling = async () => {
     console.log("checkAllSpelling started");
     const updatedSegments = await Promise.all(
@@ -94,7 +108,7 @@ const Transcribe_demo = () => {
         const spellingIssues = await checkSpelling(seg.chunk);
         console.log(seg.translated, 'Vertaalde waarde (?)')
 
-        const spellingIssuesEN = await checkSpellingEN(seg.translated || '');
+        const spellingIssuesEN = await checkSpellingTranslated(seg.translated || '');
         console.log(`segment ${i} - issues NL: ${spellingIssues.length} - issues EN: ${spellingIssuesEN.length}`);
 
         console.log('---------------------------')
@@ -118,7 +132,6 @@ const Transcribe_demo = () => {
 
   const handleTranslate = async () => {
     const select = document.getElementById('languageSelect');
-    // const targetLanguage = select.value;
     const targetLanguage = "English";
   
     const chunks = segments.map(seg => seg.chunk);
@@ -149,7 +162,7 @@ const Transcribe_demo = () => {
       const segmentsWithSpellingEN = await Promise.all(
         updatedSegments.map(async (seg) => {
           console.log(seg.translated, 'Vertaalde waarde (?)')
-          const issues = await checkSpellingEN(seg.translated);
+          const issues = await checkSpellingTranslated(seg.translated);
           return {
             ...seg,
             spellingIssuesEN: issues,
@@ -330,7 +343,7 @@ const Transcribe_demo = () => {
                     fontWeight: 'bold'
                   }}
                   onClick={async () => {
-                    const issues = await checkSpellingEN(seg.translated);
+                    const issues = await checkSpellingTranslated(seg.translated);
                     const updatedSegments = [...segments];
                     updatedSegments[index].spellingIssuesEN = issues;
                     setSegments(updatedSegments);
