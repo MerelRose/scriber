@@ -55,7 +55,8 @@ const Transcribe_demo = () => {
     try {
       const response = await fetch('http://localhost:4000/spelling/qwen', {
         method: 'POST',
-        body: JSON.stringify({ text: [text] }),
+        // body: JSON.stringify({ text: [text] }),
+        body: JSON.stringify({ text: [text], language: 'en' }),
         headers: {
           'Content-Type': 'application/json',
           'x-api-key': apikey,
@@ -111,10 +112,12 @@ const Transcribe_demo = () => {
         const spellingIssuesEN = await checkSpellingTranslated(seg.translated || '');
         console.log(`segment ${i} - issues NL: ${spellingIssues.length} - issues EN: ${spellingIssuesEN.length}`);
 
-        console.log('---------------------------')
+        console.log('---------------------------');
         console.log(spellingIssues, 'nl', Array.isArray(spellingIssues));
         console.log(spellingIssuesEN, 'en', Array.isArray(spellingIssuesEN));
-        console.log('---------------------------')
+        console.log('---------------------------');
+
+        console.log('engels issue', spellingIssuesEN);
 
         return {
           ...seg,
@@ -324,7 +327,7 @@ const Transcribe_demo = () => {
           <td>
             <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
               <input
-                name='Vertaalde stanscriptie'
+                name='Transcriptie'
                 type="text"
                 style={{
                   borderColor: seg.spellingIssuesEN?.length > 0 ? 'red' : '',
@@ -333,9 +336,12 @@ const Transcribe_demo = () => {
                 value={seg.translated}
                 onChange={(e) => handleSegmentChange(index, 'translated', e.target.value)}
               />
-              {seg.spellingIssuesEN?.length > 0 && (
+              {seg.spellingIssuesEN?.some(issue => issue.original && issue.suggestion) && (
                 <div
-                  title={seg.spellingIssuesEN.map(issue => issue.replacements?.[0]?.value).filter(Boolean).join(', ')}
+                title={seg.spellingIssuesEN
+                  .filter(issue => issue.original && issue.suggestion)
+                  .map(issue => `${issue.original} → ${issue.suggestion}`)
+                  .join('\n')}                
                   style={{
                     marginLeft: '4px',
                     color: 'red',
@@ -343,11 +349,11 @@ const Transcribe_demo = () => {
                     fontWeight: 'bold'
                   }}
                   onClick={async () => {
-                    const issues = await checkSpellingTranslated(seg.translated);
+                    const issues = await checkSpelling(seg.translated);
                     const updatedSegments = [...segments];
                     updatedSegments[index].spellingIssuesEN = issues;
                     setSegments(updatedSegments);
-                  }}                  
+                  }}
                 >
                   ⚠
                 </div>
