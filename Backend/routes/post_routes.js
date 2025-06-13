@@ -193,7 +193,7 @@ router.post('/transcribe', validateApiKey, validateToken, upload.single('audio')
 
                           # INSTRUCTIONS:
                           - First, detect the language automatically based on the text after CONTEXT.
-                          - Then, check ONLY for spelling mistakes or characters that don't belong in the detected language.
+                          - Then, check ONLY for spelling mistakes or characters that don't belong in the detected language. There can be more than one spelling errors.
                           - DO NOT correct grammar or word choice.
                           - DO NOT guess — only return if you're confident the word is incorrect and your suggestion is a real improvement.
                           - Return only valid JSON without extra whitespace or new lines.
@@ -241,7 +241,6 @@ router.post('/transcribe', validateApiKey, validateToken, upload.single('audio')
                     }
                   }
                 }
-                // Ik wil: {"spelling-error": [ {"word": "", "suggestion": ""}, ... ]}
               }
               ,
               stream: false,

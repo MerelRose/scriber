@@ -1,2 +1,2 @@
 export const apikey = 'e91c254ad58860a02c788dfb5c1a65d6a8846ab1dc649631c7db16fef4af2dec';
-export const jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJHRkciLCJpYXQiOjE3NDk3MTA1NjAsImV4cCI6MTc0OTc5Njk2MH0.vdGKPPfmtYSPsmEgWC6P6E2PQG9vg8H-Yu1ZlH2zMqE';
+export const jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJHRkciLCJpYXQiOjE3NDk3OTcwMjgsImV4cCI6MTc0OTg4MzQyOH0.D1BBsnqMl7DNxKNdTHQRZdFrFZPQNybFP-TtrgKa-a0';

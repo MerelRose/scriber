@@ -130,13 +130,9 @@ const Transcribe_demo = () => {
     console.log(updatedSegments);
     setSegments(updatedSegments);
   };
-  
-  
 
   const handleTranslate = async () => {
-    const select = document.getElementById('languageSelect');
-    const targetLanguage = "English";
-  
+    const targetLanguage = "German"; 
     const chunks = segments.map(seg => seg.chunk);
   // gemma3
     try {
