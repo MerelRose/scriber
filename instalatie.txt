@@ -81,7 +81,8 @@ Pas het bestand genaamd `access.js` in de `src/` map aan met de gegenereerde JWT
 
 ```js
 // src/access.js
-export const jwtToken = 'JOUW_JWT_TOKEN_HIER';
+export const apikey = 'YOUR_API_KEY';
+export const jwtToken = 'YOUR_JWT_TOKEN';
 ```
 
 4. Start de frontend applicatie
