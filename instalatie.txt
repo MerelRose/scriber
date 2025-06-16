@@ -35,6 +35,24 @@ pip install flask
 
 1. Download van: [https://ffmpeg.org/download.html](https://ffmpeg.org/download.html)
 2. Pak het uit en voeg de `bin` map toe aan je **systeem-PATH**.
+    systeem-PATH aanpassen
+    Druk op Win + S en zoek op "Omgevingsvariabelen bewerken" of "Edit the system environment variables".
+
+    Klik op de knop "Omgevingsvariabelen..." onderaan.
+
+    Onder "Systeemvariabelen", zoek en selecteer de variabele Path en klik op "Bewerken...".
+
+    Klik op "Nieuw" en voeg het pad toe naar de map waar ffmpeg.exe of yt-dlp.exe staat (bijvoorbeeld C:\tools\ffmpeg\bin).
+
+    Klik op OK, en herstart je terminal of computer.
+
+    Je kunt controleren of het werkt met:
+
+    bash
+    ```
+    ffmpeg -version
+    yt-dlp --version
+    ```
 
 5. Voeg `yt-dlp.exe` toe
 
@@ -66,7 +84,7 @@ Frontend Installatie
 1. Ga naar de frontend map
 
 ```bash
-cd ../frontend
+cd ../mijn-app
 ```
 
 2. Installeer dependencies
