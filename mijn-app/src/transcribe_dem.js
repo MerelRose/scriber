@@ -245,12 +245,10 @@ const Transcribe_demo = () => {
       {segments.length > 0 && (
         <form onSubmit={(e) => { e.preventDefault(); handleTranslate(); }}>
           {/* <select id="languageSelect"></select> */}
+          <button onClick={checkAllSpelling}>Spellingcontrole</button>
           <button type="submit">Vertaal naar Engels</button>
         </form>
       )}
-
-      <button onClick={checkAllSpelling}>Spellingcontrole</button>
-
 
       {error && <p style={{ color: 'red' }}>{error}</p>} {/* Toon foutmelding */}
       <table>
@@ -280,7 +278,7 @@ const Transcribe_demo = () => {
           <td><input 
                 name='Duration'
                 type="text" 
-                placeholder="Duration" 
+                placeholder="Duration"  
                 value={seg.duration}
                 onChange={(e) => handleSegmentChange(index, 'duration', e.target.value)}
               /></td>
