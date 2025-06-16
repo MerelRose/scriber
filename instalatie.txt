@@ -1,0 +1,84 @@
+Zorg dat je de volgende tools geïnstalleerd hebt op je systeem:
+
+* [Node.js](https://nodejs.org/)
+* [Python 3.8+](https://www.python.org/downloads/)
+* `git`
+* `ffmpeg` (instructies hieronder)
+* [`yt-dlp`](https://github.com/yt-dlp/yt-dlp/releases)
+
+---
+
+1. Clone de repository
+
+```bash
+git clone https://github.com/MerelRose/scriber.git
+cd scriber
+```
+
+2. Installeer Node.js dependencies
+
+```bash
+cd backend
+npm install
+```
+
+3. Installeer Python dependencies
+
+Installeer `openai-whisper & flask` via pip:
+
+```bash
+pip install openai-whisper
+pip install flask
+```
+
+4. Installeer en configureer `ffmpeg`
+
+1. Download van: [https://ffmpeg.org/download.html](https://ffmpeg.org/download.html)
+2. Pak het uit en voeg de `bin` map toe aan je **systeem-PATH**.
+
+5. Voeg `yt-dlp.exe` toe
+
+1. Download `yt-dlp.exe` vanaf:
+   [https://github.com/yt-dlp/yt-dlp/releases](https://github.com/yt-dlp/yt-dlp/releases)
+2. Vervang het bestand in de volgende map:
+
+```
+scriber/backend/bin/routes/yt-dlp.exe
+```
+
+6. Start de backend server
+
+```bash
+npm start
+```
+
+---
+
+Frontend Installatie
+
+1. Ga naar de frontend map
+
+```bash
+cd ../frontend
+```
+
+2. Installeer dependencies
+
+```bash
+npm install
+```
+
+3. Voeg je sleutel toe
+
+Pas het bestand genaamd `access.js` in de `src/` map aan met de gegenereerde JWT token die in de terminal staat van de backend (24u geldig):
+
+```js
+// src/access.js
+export const jwtToken = 'JOUW_JWT_TOKEN_HIER';
+```
+
+4. Start de frontend applicatie
+
+```bash
+npm start
+```
